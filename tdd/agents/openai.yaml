@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test-Driven Development"
+  short_description: "Behavior-first red-green-refactor guidance"
+  default_prompt: "Use $tdd to implement this behavioral change one test at a time."
