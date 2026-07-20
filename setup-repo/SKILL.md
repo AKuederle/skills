@@ -78,7 +78,7 @@ review_guidelines = """
 """
 ```
 
-Replace `<additional guidance>` with a brief reviewer-facing version of the accepted refactor policy. State what roborev must flag or permit; do not paste generic setup prose. Keep the wording consistent with `.agent/refactor-policy.md`, including whether compatibility shims are forbidden, optional by explicit decision, or required.
+Replace `<additional guidance>` with a brief reviewer-facing version of the accepted refactor policy. State what roborev must flag or permit; do not paste generic setup prose. Keep the wording consistent with `.agents/refactor-policy.md`, including whether compatibility shims are forbidden, optional by explicit decision, or required.
 
 Validate the resulting configuration and confirm the CLI can operate in the repository:
 

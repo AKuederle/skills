@@ -1,0 +1,6 @@
+interface:
+  display_name: "Backwards Compatibility"
+  short_description: "Apply repository refactoring policy"
+  default_prompt: "Apply $backwards-compatibility as referenced by the active refactoring workflow."
+policy:
+  allow_implicit_invocation: false

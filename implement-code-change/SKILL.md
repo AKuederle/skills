@@ -13,6 +13,10 @@ Choose the implementation and verification workflow from the kind of change bein
 
 Before starting implementation, read the standalone [working-with-roborev skill](../working-with-roborev/SKILL.md) completely and follow it throughout the task. Treat its asynchronous review loop as part of the implementation workflow.
 
+## Apply the Repository's Refactoring Policy
+
+When the requested work refactors, replaces, or modifies existing code or interfaces, read the standalone [backwards-compatibility skill](../backwards-compatibility/SKILL.md) completely before planning the change and follow it throughout the task.
+
 ## Route the Change
 
 Classify each requested change before writing a test.
