@@ -22,8 +22,8 @@ Use the behavioral branch only when all of these have clear answers:
 
 Then follow exactly one route:
 
-- **Behavioral change or bug fix:** Read the standalone [TDD skill](../tdd/SKILL.md) completely and follow it, resolving its relative references from the `tdd/` directory. Do not load the structural-change reference.
-- **Structural, mechanical, or trivial change:** Read the standalone [structural-code-change skill](../structural-code-change/SKILL.md) completely and follow it. Do not load the TDD skill.
+- **Behavioral change or bug fix:** Read the standalone [TDD skill](../tdd/SKILL.md) completely and follow it.
+- **Structural, mechanical, or trivial change:** Read the standalone [structural-code-change skill](../structural-code-change/SKILL.md) completely and follow it.
 - **Mixed request:** Separate the behavioral and structural slices. Read and apply each standalone skill only to its corresponding slice. Do not force the whole request through one workflow.
 
 When uncertain, identify the claimed user- or caller-visible outcome. If there is none, use the structural route.
@@ -36,7 +36,7 @@ Treat commits as both recoverable checkpoints during implementation and review u
 
 - Commit early and regularly in logical vertical slices. Each commit should leave the repository in a stable state and provide a useful point to return to if later work fails.
 - Prefer a complete thin path through the affected behavior over horizontal commits that separately add types, tests, and implementation scaffolding.
-- Each commit automtiaclly triggeres an autoreviewer (see below)
+- Each commit automatically triggeres an autoreviewer (see below)
 
 ### Mark Follow-Up Commits for Autosquash
 
@@ -84,12 +84,36 @@ After completing a coherent section of the implementation, such as a complete fe
 - Split commits that contain unrelated concerns.
 - Squash or fix up commits that merely repair earlier commits in the same logical slice.
 - Reorder commits when doing so makes dependencies and intent clearer.
+- Update commit messages accordingly.
 - Use interactive rebase or an equivalent fixup/autosquash workflow before declaring the work complete.
 - Re-run the relevant checks after rewriting the stack.
 
 This cleanup requirement must not discourage committing early and often during implementation.
 
 Do not rewrite shared history blindly. If the stack has already been pushed, verify branch ownership and the current remote state before rewriting it. Use `--force-with-lease`, never an unconditional force push, and do not overwrite unexpected remote commits.
+
+## Iterate for Quality
+
+Prefer additional implementation, inspection, and verification passes over a premature handoff. Spend the time and tokens needed to make the code as clear, robust, maintainable, and complete as reasonably possible. Reducing human review effort is more important than minimizing iterations.
+
+After reaching an apparently complete state, review the work again from different angles. Look for simpler designs, missing edge cases, weak abstractions, integration gaps, unnecessary complexity, and opportunities to better match the repository's established patterns. Continue iterating while another pass can produce a material improvement.
+
+When the most elegant solution is blocked by an adjacent problem outside the original scope, make an executive decision:
+
+- If there is one clear and logical way to resolve it, the added scope is reasonable, and the change remains safe and consistent with the repository's architecture, implement the additional change and record the decision in the relevant commit message.
+- If multiple materially different solutions exist, the expansion is substantial or risky, or it requires authority or information you do not have, stop the implementation and report the blocker together with the decision required from the user.
+
+Do not silently settle for a knowingly inferior solution merely to keep the diff small.
+
+## Final Verification
+
+Before finishing the task, verify that the complete requested implementation is present in the final stack:
+
+1. Re-read the original user request and every artifact used to define the work, including plan documents, GitHub issues, PRDs, acceptance criteria, design documents, and linked discussions.
+2. Turn the requirements from those sources into a checklist and verify each item against the implementation. Do not treat passing tests as proof that every requested requirement was implemented.
+3. Inspect the final diff and commit graph for omissions, unfinished follow-ups, stale TODOs, or partial implementation paths.
+4. Run the full relevant verification commands against the cleaned-up final stack.
+5. Finish only when confident that everything requested has been implemented and verified. If anything remains incomplete or cannot be verified, continue working or report the specific blocker instead of declaring completion.
 
 ## Pull Requests
 
