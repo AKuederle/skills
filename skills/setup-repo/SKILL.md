@@ -62,13 +62,21 @@ After installation is confirmed, verify the CLI:
 roborev version
 ```
 
-Then initialize the repository:
+Before initializing the repository, inspect its machine-readable setup state:
+
+```bash
+roborev quickstart --json
+```
+
+Treat the repository as already initialized only when the `checks` entries with IDs `post_commit_hook`, `repo_registered`, and `repo_config` all have `status: "ok"`. These checks correspond to the repository-level work performed by `roborev init`. Do not use the presence of `.roborev.toml`, historical reviews, or a running daemon alone as evidence that initialization is complete.
+
+If all three checks are `ok`, preserve the existing initialization and do not run `roborev init` again. Otherwise initialize the repository once:
 
 ```bash
 roborev init
 ```
 
-If installation, verification, or initialization fails, stop setup and report the concrete failure. Do not claim that the repository is ready.
+After initialization, run `roborev quickstart --json` again and require all three repository checks to be `ok`. If installation, verification, initialization, or the follow-up check fails, stop setup and report the concrete failure. Do not claim that the repository is ready.
 
 ## Configure Review Guidance
 
