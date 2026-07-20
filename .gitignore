@@ -1,0 +1,24 @@
+# Vim and Neovim swap files
+*.sw?
+
+# Kate swap files
+*.kate-swp
+
+# Emacs lock and autosave files
+\#*\#
+.\#*
+
+# Editor backup files
+*~
+*.bak
+*.orig
+
+# Temporary files and directories
+*.tmp
+*.temp
+.tmp/
+tmp/
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db
