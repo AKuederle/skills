@@ -31,7 +31,7 @@ Before planning implementation slices, read the standalone [reviewable-commits s
 
 Put the anticipated review units in the persistent implementation plan. Every implementation slice must end with explicit verification and commit gates. Do not mark a completed slice done or begin the next slice until it has been committed.
 
-After all implementation and Roborev feedback are complete, follow the skill's final-stack procedure before final verification. Treat commit-stack quality as a delivery obligation, not an optional cleanup pass.
+Use this commit workflow during active implementation. The required finishing handoff below owns final stack curation after implementation and review feedback are complete.
 
 ## Apply the Repository's Refactoring Policy
 
@@ -69,21 +69,15 @@ When the most elegant solution is blocked by an adjacent problem outside the ori
 
 Do not silently settle for a knowingly inferior solution merely to keep the diff small.
 
-## Final Verification
-
-Before finishing the task, verify that the complete requested implementation is present in the final stack:
-
-1. Re-read the original user request and every artifact used to define the work, including plan documents, GitHub issues, PRDs, acceptance criteria, design documents, and linked discussions.
-2. Turn the requirements from those sources into a checklist and verify each item against the implementation. Do not treat passing tests as proof that every requested requirement was implemented.
-3. Confirm the final-stack gate from the [reviewable-commits skill](../reviewable-commits/SKILL.md) was completed after implementation and Roborev feedback ended.
-4. Inspect the final diff and commit graph for omissions, unfinished follow-ups, stale TODOs, or partial implementation paths.
-5. Run the full relevant verification commands against the cleaned-up final stack.
-6. Finish only when confident that everything requested has been implemented and verified. If anything remains incomplete or cannot be verified, continue working or report the specific blocker instead of declaring completion.
-
-## Pull Requests
+## Pull Requests During Implementation
 
 When working on a feature branch, or when tasked to create or update a pull request, and a visible upstream repository is available:
 
 1. Push the branch and create a pull request after the first commit. Prefer a draft pull request while implementation is incomplete.
 2. After each completed vertical slice, push the branch and update the pull request title or description if the implementation scope, decisions, or status have changed.
-3. Keep the pull request description aligned with the finished commit stack and include relevant issue or planning-document links.
+
+## Required Finishing Handoff
+
+When the requested implementation appears complete, do not perform an ad hoc cleanup or make a completion claim. Read the standalone [finish-implementation-stack skill](../finish-implementation-stack/SKILL.md) completely and follow it as the required final phase.
+
+If that workflow finds missing implementation, resume this skill with the updated persistent plan. The task is complete only when the finishing workflow passes all applicable gates.

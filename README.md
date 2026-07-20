@@ -68,6 +68,10 @@ The [`implement-code-change`](skills/implement-code-change/) skill is the main e
 
 The [`reviewable-commits`](skills/reviewable-commits/) skill treats active implementation commits and final stack curation as one workflow. It gates every completed slice on verification and commit, preserves follow-ups as targeted fixup or squash commits, and requires a coherent bottom-up review stack before completion.
 
+### `finish-implementation-stack`
+
+The [`finish-implementation-stack`](skills/finish-implementation-stack/) skill is the required final phase for implementation work. It rechecks acceptance criteria, closes Roborev reviews, curates and verifies the final commit stack, runs fresh project verification, and ensures the branch and pull request are delivered correctly before completion.
+
 ### `setup-repo`
 
 The [`setup-repo`](skills/setup-repo/) skill establishes an explicit backwards-compatibility policy with the user, records it in `.agents/refactor-policy.md`, installs and initializes roborev, and encodes the policy in repository-specific review guidance.

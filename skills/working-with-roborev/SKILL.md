@@ -9,6 +9,8 @@ Roborev reviews every commit asynchronously. Keep implementing while reviews run
 
 Follow the [reviewable-commits skill](../reviewable-commits/SKILL.md) for commit boundaries, messages, active fixups, and final stack curation. This skill adds the Roborev-specific review lifecycle.
 
+When an implementation appears complete, the [finish-implementation-stack skill](../finish-implementation-stack/SKILL.md) coordinates this review cycle with final stack curation, verification, and delivery.
+
 ## Require a Working Roborev CLI
 
 Verify at the start of an implementation task that the `roborev` CLI is installed and can operate in the repository. If it is missing, misconfigured, or unable to perform the review workflow, treat that as a hard failure for the implementation task: stop implementation, report the concrete failure to the user, and recommend running the [setup-repo skill](../setup-repo/SKILL.md) or following the official [roborev installation guidance](https://www.roborev.io/installation/).

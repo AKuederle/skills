@@ -1,0 +1,4 @@
+interface:
+  display_name: "Finish Implementation Stack"
+  short_description: "Verify and deliver a completed implementation"
+  default_prompt: "Use $finish-implementation-stack to turn this completed implementation into a verified, review-ready delivery."
