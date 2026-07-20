@@ -54,19 +54,9 @@ Keep these rules concise and definitive. Do not copy the full refactor policy in
 
 ## Install and Initialize Roborev
 
-Follow the current official [roborev installation guidance](https://www.roborev.io/installation/) for the user's platform. Prefer the documented quick installer unless the environment or user has an established package-management preference.
+Check whether the `roborev` CLI is available. If it is not installed, instruct the user to install it by following the official [roborev installation guidance](https://www.roborev.io/installation/). Do not download or run the installer on the user's behalf. Stop and wait for the user to confirm that installation is complete before continuing setup.
 
-Current quick-install commands are:
-
-```bash
-# macOS / Linux
-curl -fsSL https://roborev.io/install.sh | bash
-
-# Windows PowerShell
-powershell -ExecutionPolicy ByPass -c "irm https://roborev.io/install.ps1 | iex"
-```
-
-Verify the installed CLI:
+After installation is confirmed, verify the CLI:
 
 ```bash
 roborev version
