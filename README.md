@@ -6,9 +6,17 @@ This repository contains locally maintained Codex skills.
 
 The [`implement-code-change`](implement-code-change/) skill is a small router for implementation work in serious repositories. It sends behavioral changes and bug fixes to the standalone TDD skill, sends structural changes to the standalone structural-code-change skill, and splits mixed requests into separate slices.
 
+## `codebase-design`
+
+The [`codebase-design`](codebase-design/) directory is a faithful copy of the current upstream [codebase-design skill from mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills/engineering/codebase-design). It provides shared vocabulary and guidance for deep modules, seam placement, testable interfaces, deepening shallow module clusters, and comparing alternative designs. The copy was checked against upstream `main` at commit `9603c1cc8118d08bc1b3bf34cf714f62178dea3b` on 2026-07-20 and remains subject to Matt Pocock's [MIT license](UPSTREAM_LICENSE.md).
+
 ## `structural-code-change`
 
 The [`structural-code-change`](structural-code-change/) skill handles behavior-preserving refactoring and mechanical changes under a green baseline. It rejects tests that merely assert names, paths, deleted source text, or other implementation details.
+
+## `working-with-roborev`
+
+The [`working-with-roborev`](working-with-roborev/) skill coordinates asynchronous roborev feedback throughout implementation. It explains when to inspect or defer feedback, requires dedicated commits for review-driven changes, and closes every review before a feature is considered complete.
 
 ## `tdd`
 

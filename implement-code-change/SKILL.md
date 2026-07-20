@@ -9,6 +9,10 @@ description: Use whenever the user tasks you with creating new code or refactori
 
 Choose the implementation and verification workflow from the kind of change being made.
 
+## Use Roborev Throughout
+
+Before starting implementation, read the standalone [working-with-roborev skill](../working-with-roborev/SKILL.md) completely and follow it throughout the task. Treat its asynchronous review loop as part of the implementation workflow, including its requirement that review-driven changes remain dedicated commits.
+
 ## Route the Change
 
 Classify each requested change before writing a test.
@@ -36,7 +40,7 @@ Treat commits as both recoverable checkpoints during implementation and review u
 
 - Commit early and regularly in logical vertical slices. Each commit should leave the repository in a stable state and provide a useful point to return to if later work fails.
 - Prefer a complete thin path through the affected behavior over horizontal commits that separately add types, tests, and implementation scaffolding.
-- Each commit automatically triggeres an autoreviewer (see below)
+- Each commit automatically triggers a roborev review; use the companion workflow above to inspect and resolve it asynchronously.
 
 ### Mark Follow-Up Commits for Autosquash
 

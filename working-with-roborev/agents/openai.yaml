@@ -1,0 +1,4 @@
+interface:
+  display_name: "Working with roborev"
+  short_description: "Handle asynchronous roborev feedback"
+  default_prompt: "Use $working-with-roborev while implementing and committing this change."
