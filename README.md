@@ -14,6 +14,10 @@ The [`codebase-design`](codebase-design/) directory is a faithful copy of the cu
 
 The [`structural-code-change`](structural-code-change/) skill handles behavior-preserving refactoring and mechanical changes under a green baseline. It rejects tests that merely assert names, paths, deleted source text, or other implementation details.
 
+## `setup-repo`
+
+The [`setup-repo`](setup-repo/) skill establishes an explicit backwards-compatibility policy with the user, records the accepted policy in `.agent/refactor-policy.md`, installs and initializes roborev, and encodes the policy into the repository's roborev review guidance.
+
 ## `working-with-roborev`
 
 The [`working-with-roborev`](working-with-roborev/) skill coordinates asynchronous roborev feedback throughout implementation. It explains when to inspect or defer feedback, requires dedicated commits for review-driven changes, and closes every review before a feature is considered complete.

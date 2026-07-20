@@ -11,7 +11,7 @@ Choose the implementation and verification workflow from the kind of change bein
 
 ## Use Roborev Throughout
 
-Before starting implementation, read the standalone [working-with-roborev skill](../working-with-roborev/SKILL.md) completely and follow it throughout the task. Treat its asynchronous review loop as part of the implementation workflow, including its requirement that review-driven changes remain dedicated commits.
+Before starting implementation, read the standalone [working-with-roborev skill](../working-with-roborev/SKILL.md) completely and follow it throughout the task. Treat its asynchronous review loop as part of the implementation workflow.
 
 ## Route the Change
 

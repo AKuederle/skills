@@ -1,0 +1,4 @@
+interface:
+  display_name: "Set Up Repository"
+  short_description: "Establish compatibility and review policy"
+  default_prompt: "Use $setup-repo to establish this repository compatibility policy and configure roborev."
