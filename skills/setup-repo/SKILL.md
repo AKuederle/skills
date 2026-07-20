@@ -39,6 +39,19 @@ Present the three bullets to the user for review. Stop and wait for explicit acc
 
 After acceptance, create `./.agents/refactor-policy.md` and write the accepted three bullets under a concise heading. Preserve their meaning and strength; do not soften them while converting them into the file.
 
+## Record Repository-Wide Agent Guidance
+
+Create or update `./AGENTS.md` without removing or rewriting unrelated guidance. Ensure it contains exactly one section with the following rules; if an equivalent section already exists, update it instead of appending a duplicate:
+
+```md
+## Repository-local skills and refactoring
+
+- When the same skill name is available from multiple locations, always use the repository-local skill under `$REPO_ROOT/.agents/skills/`. Repository-local skills take precedence over user-global skills. Do not load or apply the corresponding skill from `$HOME/.agents/skills/` when a repository-local version exists.
+- Consider the repository's current publication state and backwards-compatibility requirements recorded in `.agents/refactor-policy.md` in all interactions.
+```
+
+Keep these rules concise and definitive. Do not copy the full refactor policy into `AGENTS.md`; `.agents/refactor-policy.md` remains its source of truth.
+
 ## Install and Initialize Roborev
 
 Follow the current official [roborev installation guidance](https://www.roborev.io/installation/) for the user's platform. Prefer the documented quick installer unless the environment or user has an established package-management preference.
