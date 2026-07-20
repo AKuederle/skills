@@ -36,7 +36,14 @@ When a review contains relevant feedback, decide whether it warrants interruptin
 - If it can wait safely, finish the current slice and address it after the next commit.
 - If it should be handled immediately, first commit the current checkpoint when that produces a coherent, stable commit. Otherwise stash the in-progress work, address the feedback, and then restore and continue the interrupted work.
 
-Make every set of changes prompted by a roborev review in a dedicated commit. Do not amend an earlier commit or fold the review changes into it. This keeps the reviewer-driven correction visible in the stack.
+Make every set of changes prompted by a roborev review in a dedicated fixup commit targeting the reviewed commit that introduced the code:
+
+```bash
+git add path/to/affected-files
+git commit --fixup=<reviewed-commit>
+```
+
+Do not amend the reviewed commit directly. Keep the fixup commits separate during active implementation so the reviewer-driven corrections remain visible and recoverable.
 
 After resolving a review, summarize the resolution and close the job:
 
@@ -57,7 +64,15 @@ Wait for the final commit's review with:
 roborev wait --sha HEAD
 ```
 
-Then list open jobs again, inspect completed feedback, address relevant findings in dedicated commits, and repeat until no pending relevant feedback remains. Before declaring a feature complete, ensure every roborev review for its commits is closed, including reviews that produced no relevant feedback.
+Then list open jobs again, inspect completed feedback, address relevant findings in dedicated fixup commits, and repeat until no pending relevant feedback remains. Before declaring a feature complete, ensure every roborev review for its commits is closed, including reviews that produced no relevant feedback.
+
+After all reviews are resolved and closed, autosquash the Roborev fixups into their reviewed targets before final verification:
+
+```bash
+git rebase -i --autosquash <stack-base>
+```
+
+Run final verification and the final whole-stack review against the rewritten stack.
 
 ## Reviewing features/branches
 

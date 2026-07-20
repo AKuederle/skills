@@ -1,6 +1,6 @@
 ---
 name: implement-code-change
-description: Use whenever the user tasks you with creating new code or refactoring existing code in any serious code repository.
+description: Use whenever the user tasks you with creating new code or refactoring existing code in any serious code repository, and whenever resuming or continuing such a task after context compaction or session restoration. Re-read this skill before continuing implementation after either event.
 ---
 
 # Implement Code Changes
@@ -8,6 +8,18 @@ description: Use whenever the user tasks you with creating new code or refactori
 ## Core Principle
 
 Choose the implementation and verification workflow from the kind of change being made.
+
+## Preserve Continuity Across Compaction
+
+Treat context compaction and session restoration as fresh triggers for this skill. Before taking further implementation action after either event, re-read this file completely, then re-read the original task and every issue, PRD, plan, or other artifact that defines its acceptance criteria.
+
+At the start of the task, use the harness's persistent plan or task state to record the defining artifacts, explicit acceptance criteria, and delivery obligations. Keep this exact marker in that state until the task is complete:
+
+```text
+COMPACTION CONTINUITY: Re-read implement-code-change and the task-defining artifacts before continuing after compaction or session restoration.
+```
+
+Preserve the marker and all incomplete acceptance and delivery criteria in every plan update and compaction summary. If the harness has no persistent plan or task state, put them in the repository's existing task-planning artifact instead. Do not rely on conversational memory alone.
 
 ## Use Roborev Throughout
 
