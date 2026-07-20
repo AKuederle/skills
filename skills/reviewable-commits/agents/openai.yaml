@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reviewable Commits"
+  short_description: "Build and curate reviewable commit stacks"
+  default_prompt: "Use $reviewable-commits to commit this implementation as a coherent, reviewable stack."

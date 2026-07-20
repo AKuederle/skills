@@ -1,6 +1,6 @@
 # Personal Codex skills
 
-A collection of installable agent skills for implementation, refactoring, repository setup, automated review, test-driven development, and codebase design.
+A collection of installable agent skills for implementation, reviewable Git history, refactoring, repository setup, automated review, test-driven development, and codebase design.
 
 ## Distribution model
 
@@ -62,7 +62,11 @@ For reproducible installations, pin a release tag and explicitly install the nex
 
 ### `implement-code-change`
 
-The [`implement-code-change`](skills/implement-code-change/) skill is the main entry point for implementation work in serious repositories. It coordinates roborev, applies the repository's refactoring policy, routes behavioral work to TDD, routes structural work to the structural workflow, and handles mixed changes as separate slices.
+The [`implement-code-change`](skills/implement-code-change/) skill is the main entry point for implementation work in serious repositories. It coordinates reviewable commits and roborev, applies the repository's refactoring policy, routes behavioral work to TDD, routes structural work to the structural workflow, and handles mixed changes as separate slices.
+
+### `reviewable-commits`
+
+The [`reviewable-commits`](skills/reviewable-commits/) skill treats active implementation commits and final stack curation as one workflow. It gates every completed slice on verification and commit, preserves follow-ups as targeted fixup or squash commits, and requires a coherent bottom-up review stack before completion.
 
 ### `setup-repo`
 

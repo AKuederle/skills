@@ -25,6 +25,14 @@ Preserve the marker and all incomplete acceptance and delivery criteria in every
 
 Before starting implementation, read the standalone [working-with-roborev skill](../working-with-roborev/SKILL.md) completely and follow it throughout the task. Treat its asynchronous review loop as part of the implementation workflow.
 
+## Create a Reviewable Commit Stack
+
+Before planning implementation slices, read the standalone [reviewable-commits skill](../reviewable-commits/SKILL.md) completely and follow it throughout the task.
+
+Put the anticipated review units in the persistent implementation plan. Every implementation slice must end with explicit verification and commit gates. Do not mark a completed slice done or begin the next slice until it has been committed.
+
+After all implementation and Roborev feedback are complete, follow the skill's final-stack procedure before final verification. Treat commit-stack quality as a delivery obligation, not an optional cleanup pass.
+
 ## Apply the Repository's Refactoring Policy
 
 When the requested work refactors, replaces, or modifies existing code or interfaces, read the standalone [backwards-compatibility skill](../backwards-compatibility/SKILL.md) completely before planning the change and follow it throughout the task.
@@ -48,70 +56,6 @@ Then follow exactly one route:
 
 When uncertain, identify the claimed user- or caller-visible outcome. If there is none, use the structural route.
 
-## Commit Hygiene
-
-Treat commits as both recoverable checkpoints during implementation and review units in the final stack.
-
-### Commit During Implementation
-
-- Commit early and regularly in logical vertical slices. Each commit should leave the repository in a stable state and provide a useful point to return to if later work fails.
-- Prefer a complete thin path through the affected behavior over horizontal commits that separately add types, tests, and implementation scaffolding.
-- Each commit automatically triggers a roborev review; use the companion workflow above to inspect and resolve it asynchronously.
-
-### Mark Follow-Up Commits for Autosquash
-
-When a commit is a clear correction, completion, or second part of an earlier commit rather than an independent review unit, target the earlier commit explicitly:
-
-- Use `git commit --fixup=<target>` when the follow-up changes should be folded into the target and do not need a separate commit message.
-- Use `git commit --squash=<target>` when the changes belong in the target but the follow-up message contains context that should be retained when the messages are combined.
-- Do not mark a genuinely independent vertical slice as a fixup or squash commit.
-
-For example, after fixing an issue in commit `abc1234`:
-
-```bash
-git add path/to/affected-files
-git commit --fixup=abc1234
-```
-
-Keep fixup and squash commits during active implementation so they remain useful checkpoints. Fold them into their targets during final stack cleanup with an autosquash rebase:
-
-```bash
-git rebase -i --autosquash <stack-base>
-```
-
-### Write Context-Rich Messages
-
-Use a concise subject and a multi-line body whenever relevant context cannot be derived directly from the diff. Explain why the change was made more than what changed.
-
-Include when applicable:
-
-- Implementation decisions made with the user, especially details where multiple reasonable choices existed
-- Constraints, tradeoffs, or rejected alternatives that explain the chosen design
-- Links to issues, PRDs, planning documents, ADRs, or other material used as the basis for the implementation
-
-Do not narrate obvious file-level changes that the diff already communicates.
-
-### Preserve Seam Progression
-
-Later commits in the same stack should not repeatedly change the same seams. When a seam must evolve across commits, make that progression an explicit multi-step refactor with independently coherent checkpoints.
-
-Make the stack reviewable and approvable commit by commit from the bottom up. Each commit should have a clear purpose, manageable size, and no hidden dependency on a later cleanup commit.
-
-### Clean Up Before Completion
-
-After completing a coherent section of the implementation, such as a complete feature, inspect the commit graph and optimize it for human review:
-
-- Split commits that contain unrelated concerns.
-- Squash or fix up commits that merely repair earlier commits in the same logical slice.
-- Reorder commits when doing so makes dependencies and intent clearer.
-- Update commit messages accordingly.
-- Use interactive rebase or an equivalent fixup/autosquash workflow before declaring the work complete.
-- Re-run the relevant checks after rewriting the stack.
-
-This cleanup requirement must not discourage committing early and often during implementation.
-
-Do not rewrite shared history blindly. If the stack has already been pushed, verify branch ownership and the current remote state before rewriting it. Use `--force-with-lease`, never an unconditional force push, and do not overwrite unexpected remote commits.
-
 ## Iterate for Quality
 
 Prefer additional implementation, inspection, and verification passes over a premature handoff. Spend the time and tokens needed to make the code as clear, robust, maintainable, and complete as reasonably possible. Reducing human review effort is more important than minimizing iterations.
@@ -131,9 +75,10 @@ Before finishing the task, verify that the complete requested implementation is 
 
 1. Re-read the original user request and every artifact used to define the work, including plan documents, GitHub issues, PRDs, acceptance criteria, design documents, and linked discussions.
 2. Turn the requirements from those sources into a checklist and verify each item against the implementation. Do not treat passing tests as proof that every requested requirement was implemented.
-3. Inspect the final diff and commit graph for omissions, unfinished follow-ups, stale TODOs, or partial implementation paths.
-4. Run the full relevant verification commands against the cleaned-up final stack.
-5. Finish only when confident that everything requested has been implemented and verified. If anything remains incomplete or cannot be verified, continue working or report the specific blocker instead of declaring completion.
+3. Confirm the final-stack gate from the [reviewable-commits skill](../reviewable-commits/SKILL.md) was completed after implementation and Roborev feedback ended.
+4. Inspect the final diff and commit graph for omissions, unfinished follow-ups, stale TODOs, or partial implementation paths.
+5. Run the full relevant verification commands against the cleaned-up final stack.
+6. Finish only when confident that everything requested has been implemented and verified. If anything remains incomplete or cannot be verified, continue working or report the specific blocker instead of declaring completion.
 
 ## Pull Requests
 

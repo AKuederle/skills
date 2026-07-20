@@ -7,6 +7,8 @@ description: Use whenever working in a repository where roborev automatically re
 
 Roborev reviews every commit asynchronously. Keep implementing while reviews run, and check them at natural pauses such as while long-running tests execute or after finishing an implementation slice.
 
+Follow the [reviewable-commits skill](../reviewable-commits/SKILL.md) for commit boundaries, messages, active fixups, and final stack curation. This skill adds the Roborev-specific review lifecycle.
+
 ## Require a Working Roborev CLI
 
 Verify at the start of an implementation task that the `roborev` CLI is installed and can operate in the repository. If it is missing, misconfigured, or unable to perform the review workflow, treat that as a hard failure for the implementation task: stop implementation, report the concrete failure to the user, and recommend running the [setup-repo skill](../setup-repo/SKILL.md) or following the official [roborev installation guidance](https://www.roborev.io/installation/).
@@ -66,7 +68,7 @@ roborev wait --sha HEAD
 
 Then list open jobs again, inspect completed feedback, address relevant findings in dedicated fixup commits, and repeat until no pending relevant feedback remains. Before declaring a feature complete, ensure every roborev review for its commits is closed, including reviews that produced no relevant feedback.
 
-After all reviews are resolved and closed, autosquash the Roborev fixups into their reviewed targets before final verification:
+After all reviews are resolved and closed, use the final-stack procedure from the [reviewable-commits skill](../reviewable-commits/SKILL.md) to autosquash the Roborev fixups into their reviewed targets before final verification:
 
 ```bash
 git rebase -i --autosquash <stack-base>
@@ -82,4 +84,6 @@ At the end of a full implementation stack, you should ask roborev to review the 
 roborev review --since abc123       # Review commits since abc123 (exclusive)
 ```
 
-Don't ask for repeated full stack reviews when addressing findings.
+If this final whole-stack review produces relevant findings, address them as dedicated fixup commits targeting the commits that introduced the problems, then comment on and close the review. Run the final-stack curation procedure again so those fixups are absorbed, and repeat final verification against the newly rewritten stack before completion.
+
+Don't ask for repeated full stack reviews when addressing findings from this final review.
