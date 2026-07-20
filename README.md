@@ -8,24 +8,24 @@ This collection is distributed directly from its Git repository. It is not publi
 
 ## Quick start
 
-The collection can be installed with the Vercel [`skills`](https://github.com/vercel-labs/skills) CLI. Replace `YOUR_GITHUB_USER` with the repository owner after publishing this repository.
+The collection can be installed directly from this Git repository with the Vercel [`skills`](https://github.com/vercel-labs/skills) CLI.
 
 Inspect the available skills:
 
 ```bash
-npx skills add YOUR_GITHUB_USER/my_skills --list
+npx skills add AKuederle/skills --list
 ```
 
 The equivalent explicit Git URL is:
 
 ```bash
-npx skills add https://github.com/YOUR_GITHUB_USER/my_skills.git --list
+npx skills add https://github.com/AKuederle/skills.git --list
 ```
 
 Install the complete suite globally for Codex:
 
 ```bash
-npx skills add YOUR_GITHUB_USER/my_skills --skill '*' --global --agent codex --yes
+npx skills add AKuederle/skills --skill '*' --global --agent codex --yes
 ```
 
 Installing the complete suite is recommended because `implement-code-change` routes work through several companion skills. Installing only the router leaves those relative references unresolved.
@@ -37,7 +37,7 @@ After installation, run `$setup-repo` in each serious repository before the firs
 Omit `--global` to install the suite into the current project and create a `skills-lock.json` that the project can commit:
 
 ```bash
-npx skills add YOUR_GITHUB_USER/my_skills --skill '*' --agent codex --yes
+npx skills add AKuederle/skills --skill '*' --agent codex --yes
 ```
 
 Project-local installation is useful for testing a new skill version in one repository without changing the globally installed copy.
@@ -47,7 +47,7 @@ Project-local installation is useful for testing a new skill version in one repo
 Releases use repository-wide semantic-version tags because the implementation skills depend on one another. Install an immutable release with:
 
 ```bash
-npx skills add 'YOUR_GITHUB_USER/my_skills#v0.1.0' --skill '*' --global --agent codex --yes
+npx skills add 'AKuederle/skills#v0.1.0' --skill '*' --global --agent codex --yes
 ```
 
 Installations that follow the default branch can be updated with:
