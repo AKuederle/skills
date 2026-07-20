@@ -1,0 +1,4 @@
+interface:
+  display_name: "Structural Code Change"
+  short_description: "Behavior-preserving code change workflow"
+  default_prompt: "Use $structural-code-change to make this behavior-preserving code change safely."

@@ -1,129 +1,36 @@
 ---
 name: tdd
-description: Apply behavior-first test-driven development through small red-green-refactor cycles. Use when the user explicitly requests TDD or red-green-refactor, or when implementing substantive behavior or fixing a bug for which a durable behavioral regression test is valuable. Do not create new tests for pure refactoring, renames, file moves, formatting, packaging mechanics, generated files, or trivial deletions unless they change a meaningful public contract.
+description: Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants integration tests.
 ---
 
 # Test-Driven Development
 
-## Core Principle
+TDD is the red → green loop. This skill is the reference that makes that loop produce tests worth keeping: what a good test is, where tests go, the anti-patterns, and the rules of the loop. Every section applies on every cycle — consult them before and during the loop, not after.
 
-Test meaningful behavior through supported public interfaces. Do not test the implementation diff itself.
+When exploring the codebase, read `CONTEXT.md` (if it exists) so test names and interface vocabulary match the project's domain language, and respect ADRs in the area you're touching.
 
-Prefer integration-style tests that describe what a user or caller can accomplish. Make tests survive internal refactoring. Avoid tests coupled to private methods, internal collaborators, source text, filenames, or incidental structure.
+## What a good test is
 
-## Choose the Correct Change Mode
+Tests verify behavior through public interfaces, not implementation details. Code can change entirely; tests shouldn't. A good test reads like a specification — "user can checkout with valid cart" tells you exactly what capability exists — and survives refactors because it doesn't care about internal structure.
 
-Classify the requested change before writing a test.
+See [tests.md](tests.md) for examples and [mocking.md](mocking.md) for mocking guidelines.
 
-### Behavioral change or bug fix
+## Seams — where tests go
 
-Use red-green-refactor when the change adds, removes, or corrects meaningful externally observable behavior and a permanent regression test is worth maintaining.
+A **seam** is the public boundary you test at: the interface where you observe behavior without reaching inside. Tests live at seams, never against internals.
 
-Before adding a test, answer all of these:
+**Test only at pre-agreed seams.** Before writing any test, write down the seams under test and confirm them with the user. No test is written at an unconfirmed seam. You can't test everything — agreeing the seams up front is how testing effort lands on the critical paths and complex logic instead of every edge case.
 
-1. What behavior important to a user or caller is changing?
-2. Through which supported public interface can that behavior be observed?
-3. Would this test remain valuable after another internal refactor?
-4. Is the behavior important enough to justify permanent test maintenance?
+Ask: "What's the public interface, and which seams should we test?"
 
-If the answers are clear, proceed with a behavioral TDD cycle.
+## Anti-patterns
 
-### Structural, mechanical, or trivial change
+- **Implementation-coupled** — mocks internal collaborators, tests private methods, or verifies through a side channel (querying the database instead of using the interface). The tell: the test breaks when you refactor but behavior hasn't changed.
+- **Tautological** — the assertion recomputes the expected value the way the code does (`expect(add(a, b)).toBe(a + b)`, a snapshot derived by hand the same way, a constant asserted equal to itself), so it passes by construction and can never disagree with the code. Expected values must come from an independent source of truth — a known-good literal, a worked example, the spec.
+- **Horizontal slicing** — writing all tests first, then all implementation. Bulk tests verify _imagined_ behavior: you test the _shape_ of things rather than user-facing behavior, the tests go insensitive to real changes, and you commit to test structure before understanding the implementation. Work in **vertical slices** instead — one test → one implementation → repeat, each test a **tracer bullet** that responds to what the last cycle taught you.
 
-Do not manufacture a failing test for a change that preserves behavior or is already checked better by development tooling. Refactor under green instead:
+## Rules of the loop
 
-1. Run the smallest relevant existing test suite or validation command and establish green.
-2. Make the smallest structural or mechanical change.
-3. Run the same checks again.
-4. Add a test only if the work reveals an important behavior that was previously unprotected.
-
-Do not create tests solely to verify:
-
-- File or module names
-- Symbol, class, function, or object names
-- File locations or directory structure
-- The presence or absence of source text, logging calls, comments, or configuration text
-- Mechanical import-path changes
-- Formatting, spelling, or autocorrect changes
-- Generated output mirroring the implementation diff
-- Private implementation structure
-- Facts already enforced adequately by the compiler, type checker, linter, build, or package manager
-
-Use the most direct relevant verification instead:
-
-- Rename or file move: compiler, type checker, build, and existing tests
-- Internal import or export change: compiler, build, and existing tests
-- Supported public export change: consumer-facing import or build smoke test when that boundary is a durable contract
-- Packaging change: package, install, and consumer import smoke test
-- Removal of incidental logging: diff inspection, linting, and existing tests
-- Removal of sensitive or contractually forbidden logging: behavioral or security regression test when the absence is itself a durable requirement
-
-Do not turn an implementation diff into a behavioral contract.
-
-## Plan a Behavioral TDD Cycle
-
-Before beginning a behavioral TDD cycle:
-
-- Confirm the public interface and the behavior priorities with the user when they are not already clear.
-- Identify the seams under test: supported public boundaries where behavior can be observed without reaching into internals.
-- Confirm those seams with the user when the request does not already establish them. Do not add tests at arbitrary or incidental boundaries.
-- Use the project's domain language in test names and interfaces.
-- Respect relevant architecture decisions and established test conventions.
-- List behaviors, not implementation steps.
-- Focus test effort on critical paths and complex logic rather than exhaustive low-value coverage.
-
-## Work in Vertical Slices
-
-Do not write all tests first and then all implementation. Work one behavior at a time:
-
-```text
-RED:   Add one test for one missing behavior and observe the expected failure.
-GREEN: Add the minimum implementation needed to make that test pass.
-REPEAT: Select the next behavior using what the previous cycle taught you.
-STOP:  End the implementation loop once the requested behaviors are green.
-```
-
-A valid red failure must demonstrate missing or incorrect behavior. A test failing only because an expected filename, symbol name, object name, log statement, or source-code pattern differs is not behavioral evidence.
-
-## Write Durable Tests
-
-Write tests that:
-
-- Exercise real code paths through supported public interfaces
-- Describe user- or caller-visible outcomes
-- Fail when the protected behavior breaks
-- Survive internal restructuring and renaming
-- Use one focused logical expectation per behavior
-
-Avoid tests that:
-
-- Mock internal collaborators merely to assert calls or ordering
-- Test private methods directly
-- Inspect source files for implementation text
-- Assert internal shapes that callers do not depend on
-- Recompute the expected result using the same logic as the implementation, making the assertion true by construction
-- Duplicate guarantees already provided by static tooling
-- Exist only to make the current edit produce a red step
-
-Use mocks at true system boundaries when the real dependency is unavailable, unsafe, nondeterministic, or prohibitively slow. Prefer fakes or contract-level boundaries over mocks of internal modules.
-
-Derive expected values from an independent source of truth such as a specification, known-good literal, or worked example.
-
-## Keep Refactoring Outside the Loop
-
-Treat broader refactoring as a separate review stage, not another red-green implementation cycle. After the requested behavior is green, review the implementation and decide whether refactoring is warranted. If it is, improve the implementation in small steps and run the relevant existing tests after each step.
-
-Never refactor while red. Restore green and end the behavioral loop first.
-
-## Cycle Checklist
-
-Before keeping a new test, verify:
-
-- [ ] The test protects meaningful, durable behavior.
-- [ ] The test uses a supported public interface.
-- [ ] The test would survive an internal refactor or rename.
-- [ ] The test is not merely an assertion about the requested diff.
-- [ ] Static tooling or an existing test does not already provide the right protection.
-- [ ] The maintenance cost is justified by the regression risk.
-
-If any answer is no, revise the test or remove it.
+- **Red before green.** Write the failing test first, then only enough code to pass it. Don't anticipate future tests or add speculative features.
+- **One slice at a time.** One seam, one test, one minimal implementation per cycle.
+- **Refactoring is not part of the loop.** It belongs to the review stage (see the `code-review` skill), not the red → green implementation cycle.
