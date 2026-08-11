@@ -9,6 +9,37 @@ description: Use whenever the user tasks you with creating new code or refactori
 
 Choose the implementation and verification workflow from the kind of change being made.
 
+## Assume Competent Callers
+
+Treat documented contracts, public types, and established conventions for library and other
+in-process programmatic APIs as agreements with competent, cooperative callers. Assume callers can
+understand the contract, recognize their own mistakes, and correct their usage.
+
+Do not add validation, provenance tracking, wrappers, compatibility paths, defensive state, or
+special error classification solely to accommodate behavior outside the supported contract,
+including callers that:
+
+- violate documented preconditions;
+- bypass or misrepresent public types;
+- forge library-owned values, tokens, or error variants;
+- construct states the supported API cannot produce; or
+- otherwise disregard documented conventions.
+
+Let unsupported misuse fail naturally. Do not complicate supported behavior merely to produce a
+friendlier result for contract violations, and do not add tests requiring unsupported misuse to be
+handled unless the public API explicitly promises that behavior.
+
+This assumption does not apply at genuine trust boundaries, including network or persisted data,
+untyped external input, IPC and platform adapters, security or capability boundaries, and
+operations where misuse could silently corrupt or destroy unrelated data. Preserve library
+invariants and guarantees owed to supported callers.
+
+Before adding defensive machinery, require a concrete supported use case—not merely hypothetical
+misuse—and determine whether documentation, stronger types, or a simpler interface addresses it
+better. Treat automated review feedback about unsupported misuse as a design suggestion, not an
+implementation requirement; it must not expand the user's stated scope or override the intended
+contract.
+
 ## Preserve Continuity Across Compaction
 
 Treat context compaction and session restoration as fresh triggers for this skill. Before taking further implementation action after either event, re-read this file completely, then re-read the original task and every issue, PRD, plan, or other artifact that defines its acceptance criteria.
@@ -40,6 +71,9 @@ When the requested work refactors, replaces, or modifies existing code or interf
 ## Route the Change
 
 Classify each requested change before writing a test.
+
+Tests must exercise supported behavior. A test for behavior outside the documented API contract
+does not justify production complexity.
 
 Use the behavioral branch only when all of these have clear answers:
 
