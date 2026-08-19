@@ -47,7 +47,7 @@ Project-local installation is useful for testing a new skill version in one repo
 Releases use repository-wide semantic-version tags because the implementation skills depend on one another. Install an immutable release with:
 
 ```bash
-npx skills add 'AKuederle/skills#v0.4.0' --skill '*' --global --agent codex --yes
+npx skills add 'AKuederle/skills#v0.5.0' --skill '*' --global --agent codex --yes
 ```
 
 Installations that follow the default branch can be updated with:
@@ -99,6 +99,10 @@ The [`codebase-design`](skills/codebase-design/) directory is a faithful copy of
 ### `unslop`
 
 The [`unslop`](skills/unslop/) directory vendors the upstream [unslop skill from cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop). It removes common AI-writing patterns while retaining the writer's intended meaning and voice. This copy adds one sentence that uses ASD-STE100 Simplified Technical English (STE) as the basis for clear, direct technical writing. It was checked against upstream `main` at commit `60c641e4fad674784b30abcf9f8915dea39df38d` on 2026-08-19.
+
+### `reference-dependency-checkouts`
+
+The [`reference-dependency-checkouts`](skills/reference-dependency-checkouts/) skill helps agents investigate complicated third-party dependencies from a reusable local source checkout. It reuses or safely updates matching clones under `/home/arne/Documents/repos/_references/` before creating a new one, regardless of the dependency's programming language.
 
 ## Repository layout
 

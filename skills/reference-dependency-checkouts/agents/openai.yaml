@@ -1,0 +1,3 @@
+interface:
+  display_name: "Reference Dependency Checkouts"
+  short_description: "Reuse local source for complex dependencies"
