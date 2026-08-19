@@ -1,6 +1,6 @@
 # Personal Codex skills
 
-A collection of installable agent skills for implementation, reviewable Git history, refactoring, repository setup, automated review, test-driven development, and codebase design.
+A collection of installable agent skills for implementation, reviewable Git history, refactoring, repository setup, automated review, test-driven development, codebase design, and clear writing.
 
 ## Distribution model
 
@@ -47,7 +47,7 @@ Project-local installation is useful for testing a new skill version in one repo
 Releases use repository-wide semantic-version tags because the implementation skills depend on one another. Install an immutable release with:
 
 ```bash
-npx skills add 'AKuederle/skills#v0.3.0' --skill '*' --global --agent codex --yes
+npx skills add 'AKuederle/skills#v0.4.0' --skill '*' --global --agent codex --yes
 ```
 
 Installations that follow the default branch can be updated with:
@@ -96,6 +96,10 @@ The [`tdd`](skills/tdd/) directory is a faithful copy of the upstream [TDD skill
 
 The [`codebase-design`](skills/codebase-design/) directory is a faithful copy of the upstream [codebase-design skill from mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills/engineering/codebase-design). It provides shared vocabulary and guidance for deep modules, seam placement, testable interfaces, deepening shallow module clusters, and comparing alternative designs. The copy was checked against upstream `main` at commit `9603c1cc8118d08bc1b3bf34cf714f62178dea3b` on 2026-07-20.
 
+### `unslop`
+
+The [`unslop`](skills/unslop/) directory vendors the upstream [unslop skill from cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop). It removes common AI-writing patterns while retaining the writer's intended meaning and voice. This copy adds one sentence that uses ASD-STE100 Simplified Technical English (STE) as the basis for clear, direct technical writing. It was checked against upstream `main` at commit `60c641e4fad674784b30abcf9f8915dea39df38d` on 2026-08-19.
+
 ## Repository layout
 
 Each skill lives at `skills/<name>/SKILL.md`, the standard collection layout discovered by the `skills` CLI. Supporting references and agent-specific interface metadata remain inside their corresponding skill directories.
@@ -110,4 +114,4 @@ npx -y skills@latest add . --list
 
 The original TDD skill was installed with the `skills` CLI from `skills/engineering/tdd/SKILL.md`; that provenance is recorded in `~/.agents/.skill-lock.json` under the `tdd` entry.
 
-Original material in this repository is available under the [MIT License](LICENSE). Material copied from Matt Pocock's repository remains subject to its [upstream MIT license](UPSTREAM_LICENSE.md).
+Original material in this repository is available under the [MIT License](LICENSE). Material copied from Matt Pocock's repository remains subject to its [upstream MIT license](UPSTREAM_LICENSE.md). The vendored `unslop` skill remains subject to its [upstream MIT license](skills/unslop/LICENSE).
