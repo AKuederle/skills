@@ -96,6 +96,10 @@ The [`tdd`](skills/tdd/) directory is a faithful copy of the upstream [TDD skill
 
 The [`codebase-design`](skills/codebase-design/) directory is a faithful copy of the upstream [codebase-design skill from mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills/engineering/codebase-design). It provides shared vocabulary and guidance for deep modules, seam placement, testable interfaces, deepening shallow module clusters, and comparing alternative designs. The copy was checked against upstream `main` at commit `9603c1cc8118d08bc1b3bf34cf714f62178dea3b` on 2026-07-20.
 
+### `reference-dependency-checkouts`
+
+The [`reference-dependency-checkouts`](skills/reference-dependency-checkouts/) skill helps agents investigate complicated third-party dependencies from a reusable local source checkout. It reuses or safely updates matching clones under `/home/arne/Documents/repos/_references/` before creating a new one, regardless of the dependency's programming language.
+
 ## Repository layout
 
 Each skill lives at `skills/<name>/SKILL.md`, the standard collection layout discovered by the `skills` CLI. Supporting references and agent-specific interface metadata remain inside their corresponding skill directories.
