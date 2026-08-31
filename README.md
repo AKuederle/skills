@@ -47,7 +47,7 @@ Project-local installation is useful for testing a new skill version in one repo
 Releases use repository-wide semantic-version tags because the implementation skills depend on one another. Install an immutable release with:
 
 ```bash
-npx skills add 'AKuederle/skills#v0.5.0' --skill '*' --global --agent codex --yes
+npx skills add 'AKuederle/skills#v0.6.0' --skill '*' --global --agent codex --yes
 ```
 
 Installations that follow the default branch can be updated with:
