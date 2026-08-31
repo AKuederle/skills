@@ -9,6 +9,17 @@ description: Use whenever the user tasks you with creating new code or refactori
 
 Choose the implementation and verification workflow from the kind of change being made.
 
+## Establish Scope and a Baseline
+
+Before editing, identify the owned files, affected public interfaces, direct consumers, and the
+smallest relevant verification commands. Confirm that the worktree can run those commands and
+record pre-existing failures. For migrations, build the consumer inventory before changing the
+first call site.
+
+Do not broaden the change or start root verification while the owned slice still lacks a stable
+focused check. If the same approach fails twice, stop retrying it. Minimize the failure, inspect the
+responsible boundary, and update the plan before another edit.
+
 ## Assume Competent Callers
 
 Treat documented contracts, public types, and established conventions for library and other
@@ -55,6 +66,14 @@ Preserve the marker and all incomplete acceptance and delivery criteria in every
 ## Use Roborev Throughout
 
 Before starting implementation, read the standalone [working-with-roborev skill](../working-with-roborev/SKILL.md) completely and follow it throughout the task. Treat its asynchronous review loop as part of the implementation workflow.
+
+## Respect Integration Ownership
+
+Determine whether this run owns the full change or one delegated slice. A delegated slice runs
+focused checks for its owned files and produces the requested handoff or commit. The parent or
+named integration owner owns rebases, root verification, pull-request updates, final stack
+curation, and cross-slice fixes. Do not repeat those integration steps in each worker unless the
+task explicitly assigns them.
 
 ## Create a Reviewable Commit Stack
 
