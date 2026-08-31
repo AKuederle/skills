@@ -9,6 +9,17 @@ description: Use whenever the user tasks you with creating new code or refactori
 
 Choose the implementation and verification workflow from the kind of change being made.
 
+## Establish Scope and a Baseline
+
+Before editing, identify the owned files, affected public interfaces, direct consumers, and the
+smallest relevant verification commands. Confirm that the worktree can run those commands and
+record pre-existing failures. For migrations, build the consumer inventory before changing the
+first call site.
+
+Do not broaden the change or start root verification while the owned slice still lacks a stable
+focused check. If the same approach fails twice, stop retrying it. Minimize the failure, inspect the
+responsible boundary, and update the plan before another edit.
+
 ## Assume Competent Callers
 
 Treat documented contracts, public types, and established conventions for library and other
@@ -56,6 +67,14 @@ Preserve the marker and all incomplete acceptance and delivery criteria in every
 
 Before starting implementation, read the standalone [working-with-roborev skill](../working-with-roborev/SKILL.md) completely and follow it throughout the task. Treat its asynchronous review loop as part of the implementation workflow.
 
+## Respect Integration Ownership
+
+Determine whether this run owns the full change or one delegated slice. A delegated slice runs
+focused checks for its owned files and produces the requested handoff or commit. The parent or
+named integration owner owns rebases, root verification, pull-request updates, final stack
+curation, and cross-slice fixes. Do not repeat those integration steps in each worker unless the
+task explicitly assigns them.
+
 ## Create a Reviewable Commit Stack
 
 Before planning implementation slices, read the standalone [reviewable-commits skill](../reviewable-commits/SKILL.md) completely and follow it throughout the task.
@@ -96,12 +115,20 @@ Prefer additional implementation, inspection, and verification passes over a pre
 
 After reaching an apparently complete state, review the work again from different angles. Look for simpler designs, missing edge cases, weak abstractions, integration gaps, unnecessary complexity, and opportunities to better match the repository's established patterns. Continue iterating while another pass can produce a material improvement.
 
-When the most elegant solution is blocked by an adjacent problem outside the original scope, make an executive decision:
+Stop and reconvene with the user when implementation reveals significant scope or design friction.
+This includes cases where:
 
-- If there is one clear and logical way to resolve it, the added scope is reasonable, and the change remains safe and consistent with the repository's architecture, implement the additional change and record the decision in the relevant commit message.
-- If multiple materially different solutions exist, the expansion is substantial or risky, or it requires authority or information you do not have, stop the implementation and report the blocker together with the decision required from the user.
+- completing the task requires work outside the agreed scope;
+- the plan or acceptance criteria no longer describe a sound implementation;
+- the apparent solution is a workaround for a weak existing or proposed API;
+- the design forces repeated adapters, special cases, duplicated state, or other complexity that
+  points to a missing abstraction or misplaced responsibility; or
+- a cleaner solution requires a meaningful API, architecture, compatibility, or ownership decision.
 
-Do not silently settle for a knowingly inferior solution merely to keep the diff small.
+Do not broaden the scope merely because one technical path appears clear. Do not hide the friction
+inside a workaround or silently ship a knowingly weak design to keep the diff small. Preserve the
+current work when practical, then report the evidence, the scope or API weakness, and the decision
+needed from the user. Continue only after the user confirms the revised direction and scope.
 
 ## Pull Requests During Implementation
 
