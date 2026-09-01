@@ -94,6 +94,12 @@ Classify each requested change before writing a test.
 Tests must exercise supported behavior. A test for behavior outside the documented API contract
 does not justify production complexity.
 
+Choose the proof before choosing a test. Name a plausible incorrect implementation that the new
+test would reject while the compiler, linter, build, and existing tests still pass. If there is no
+such failure, use the direct static check and do not add a persistent test. A test must provide
+independent evidence, not repeat a type annotation, schema declaration, export inventory, or other
+fact already enforced by the toolchain.
+
 Use the behavioral branch only when all of these have clear answers:
 
 1. What behavior important to a user or caller is changing?
