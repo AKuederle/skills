@@ -20,6 +20,8 @@ Plan commit boundaries
 -> repeat
 -> curate the final stack
 -> verify the rewritten stack
+-> run final changeset review
+-> retain review corrections as additional commits
 ```
 
 ## Required Final State
@@ -32,7 +34,9 @@ The final commit stack must:
 - Keep behavioral tests with the change whose behavior they prove.
 - Separate unrelated changes and distinguish preparatory refactors from behavior changes.
 - Contain no unresolved `fixup!` or `squash!` commits.
-- Avoid later commits repeatedly rewriting seams introduced earlier unless the stack intentionally demonstrates a meaningful multi-step transition.
+- Avoid repeated seam rewrites during implementation unless the stack intentionally demonstrates
+  a meaningful transition. Preserve corrections requested by the final changeset review as
+  separate commits so the user can assess them.
 - Use messages that preserve important motivation and decisions that cannot be derived from the diff.
 
 These are design constraints during implementation, not merely cleanup checks at the end.
@@ -62,9 +66,15 @@ Keep corrections and review feedback recoverable during active implementation:
 - Create a normal commit when the change is an independently reviewable unit.
 - Never amend a reviewed commit directly while the active review workflow requires dedicated fixups.
 
+These fixup and squash rules apply before final changeset review starts. After that gate, make
+corrections as normal additional commits and preserve both the reviewed stack and its correction
+commits, including fixes prompted by their automatic reviews.
+
 ## Curate the Final Stack
 
-After implementation and review feedback are complete, read [references/final-stack.md](references/final-stack.md) completely and follow it before final verification or completion claims.
+After implementation and its per-commit review feedback are complete, read
+[references/final-stack.md](references/final-stack.md) completely and follow it before starting
+the final changeset review. Do not repeat curation after that review starts.
 
 This is a hard transition gate. Do not declare the task complete until the final stack has been curated, rewritten as needed, and verified in its rewritten form.
 

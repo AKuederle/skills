@@ -147,4 +147,13 @@ When working on a feature branch, or when tasked to create or update a pull requ
 
 When the requested implementation appears complete, do not perform an ad hoc cleanup or make a completion claim. Read the standalone [finish-implementation-stack skill](../finish-implementation-stack/SKILL.md) completely and follow it as the required final phase.
 
+After finalizing the commit stack, invoke the `feature_ready` RoboRev panel if it is configured
+in the effective global or repository configuration. Review the full task or PR range from its
+exact base, not only `HEAD`. Follow the finishing skill's final review gate for invocation,
+task context, and findings.
+
+Final panel corrections must remain normal additional commits. Preserve the reviewed stack and
+the correction commits; do not amend, autosquash, or rebase them into earlier commits. This also
+applies to corrections from automatic reviews of those new commits.
+
 If that workflow finds missing implementation, resume this skill with the updated persistent plan. The task is complete only when the finishing workflow passes all applicable gates.
