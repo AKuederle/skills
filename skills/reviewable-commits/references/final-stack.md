@@ -10,7 +10,9 @@ git log --reverse --format=fuller <stack-base>..HEAD
 git status --short
 ```
 
-Confirm that implementation is complete and that all required review feedback has been resolved before rewriting the stack.
+Confirm that implementation and its per-commit review feedback are complete before rewriting
+the stack. This procedure runs before final changeset review. If that review has already started,
+skip rewriting and verify the preserved stack plus its normal additional correction commits.
 
 ## 2. Audit Bottom-Up
 
@@ -51,6 +53,10 @@ Do not compress a coherent multi-commit story into one commit merely to make the
 
 If the branch was pushed, inspect its upstream and remote state before rewriting. Rewrite only when branch ownership and the implementation workflow permit it. Update the remote with `--force-with-lease` when required.
 
+Once the finalized stack enters its final review, these rewrite operations no longer apply.
+Corrections from that review and follow-up reviews stay in normal additional commits; do not
+amend, squash, autosquash, reorder, or rebase the reviewed stack or its correction commits.
+
 ## 4. Verify the Rewritten Stack
 
 After the final rewrite:
@@ -75,3 +81,6 @@ Do not declare the stack ready until all statements are true:
 - Fixups and squash commits have been absorbed.
 - Final verification passed after the last rewrite.
 - No task-owned changes remain uncommitted.
+
+Record the finalized head before starting final changeset review. Later completion checks must
+verify the reviewed commits remain intact and retain any additional correction commits.

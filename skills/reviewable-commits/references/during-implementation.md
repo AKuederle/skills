@@ -90,6 +90,10 @@ git commit \
 
 ## 5. Classify Follow-Ups Correctly
 
+This section applies during implementation before final changeset review starts. After that
+gate, preserve the reviewed stack and make every correction a normal additional commit,
+including corrections requested by automatic reviews of earlier correction commits.
+
 Use a fixup when a correction belongs to an earlier review unit:
 
 ```bash

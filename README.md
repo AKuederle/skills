@@ -58,6 +58,120 @@ npx skills update --global
 
 For reproducible installations, pin a release tag and explicitly install the next tag when upgrading. `npx skills install` is currently an alias for `npx skills add`; `add` is used here because it is the primary documented command.
 
+## RoboRev review setup
+
+This setup combines automatic reviews of individual commits with a manually triggered `feature_ready` panel for a complete feature or PR. It was tested with RoboRev v0.69.0. Use that version or newer, a Codex CLI that supports `codex exec --output-schema`, and access to the models below. Install the skills above, then initialize RoboRev in each target repository with `$setup-repo` or `roborev init`.
+
+### Global defaults and access to style skills
+
+Set the automatic reviewer to GPT-6.1 SOL with high reasoning and allow Codex reviewers to discover installed skills:
+
+```bash
+roborev config set --global review_agent codex
+roborev config set --global review_model gpt-6.1-sol
+roborev config set --global review_reasoning high
+roborev config set --global agent.codex.disable_review_skills false
+```
+
+These settings live in `~/.roborev/config.toml`; repository overrides still take precedence. The older reasoning preset `thorough` also maps to high. `ignore_review_user_config = true` can remain enabled: skipping the personal Codex configuration does not disable discovery of installed global skills.
+
+Append the following to the existing `review_guidelines` string in the global configuration. Preserve any existing guidance; setting `review_guidelines` through the CLI replaces the entire value.
+
+```text
+Consult applicable repository-local and installed global style-guide skills and
+their supporting documents as review criteria. Repository-local versions take
+precedence over global versions with the same name. Selected global skill
+documents are an explicit exception to checkout-only file reading. Perform the
+review yourself; do not run skill implementation, commit, fix, publishing, or
+recursive review workflows.
+```
+
+Include the same rule in project review guidance where a project supplies its own `review_guidelines`. Each machine running reviews needs the relevant skills installed; this flag does not install or copy them.
+
+### Configure the feature panel in a repository
+
+Invoke the manually selected [`setup-roborev-panel`](skills/setup-roborev-panel/) skill in the target repository:
+
+```text
+$setup-roborev-panel Configure this repository's feature_ready panel.
+```
+
+The skill merges the panel into the local configuration, preserves existing guidance and customizations, installs the rubrics, and validates the result. It does not start a review or change global settings. It is available only through explicit invocation.
+
+For manual setup, merge [the complete panel configuration](skills/setup-roborev-panel/assets/feature-ready.toml) into `.roborev.toml`. Preserve existing settings; keep the top-level `fix_reasoning` setting before any TOML table headers. Panel synthesis uses the fix workflow's reasoning setting in v0.69.0, so `fix_reasoning = "high"` also sets reasoning for normal fix jobs.
+
+All four reviewers are required:
+
+| Member | Focus | Model | Reasoning |
+| --- | --- | --- | --- |
+| `full_stack` | Correctness across application layers | `gpt-6.1-sol` | High |
+| `plan_conformance` | Accepted plan and requirements | `gpt-6.1-sol` | High |
+| `conventions` | Documented styles and concrete nitpicks | `gpt-6-luna` | High |
+| `simplicity` | Necessity, reuse, and simpler approaches | `gpt-6.1-sol` | High |
+| Synthesis | Combine member findings | `gpt-6.1-sol` | High via `fix_reasoning` |
+
+Leave `review.default_panel` and `review.hook_review_panel` unset for an explicitly triggered panel. Check inherited global selectors too. Automatic commit reviews continue to use the single reviewer.
+
+Panels can also be defined globally. Named project entries override matching global entries; repeat the complete entry when overriding one. Global rubric paths can be absolute, home-relative, or repository-relative. Repository-relative paths must exist in every reviewed repository. Keeping this example and its rubrics in each project makes project-specific changes reviewable. See RoboRev's [panel configuration](https://www.roborev.io/docs/advanced/subagent-review-panels/) and [custom review types](https://www.roborev.io/docs/advanced/custom-review-types/) for other options.
+
+### Install and adapt the reviewer rubrics
+
+A rubric template is a file containing the criteria for one reviewer. The shared include provides common rules; RoboRev adds the changeset and manages the output format. The skill's assets are the canonical examples:
+
+| Target file | Template |
+| --- | --- |
+| `.agents/roborev/guidance.md` | [Shared review guidance](skills/setup-roborev-panel/assets/roborev/guidance.md) |
+| `.agents/roborev/full-stack.md` | [Full-stack review](skills/setup-roborev-panel/assets/roborev/full-stack.md) |
+| `.agents/roborev/plan-conformance.md` | [Plan conformance](skills/setup-roborev-panel/assets/roborev/plan-conformance.md) |
+| `.agents/roborev/conventions.md` | [Conventions and nitpicks](skills/setup-roborev-panel/assets/roborev/conventions.md) |
+| `.agents/roborev/simplicity.md` | [Simplicity and necessity](skills/setup-roborev-panel/assets/roborev/simplicity.md) |
+
+Copy the five templates from an installed skill or this source checkout:
+
+```bash
+# Point this at the installed skill or skills/setup-roborev-panel in a source checkout.
+panel_skill_dir=/path/to/setup-roborev-panel
+mkdir -p .agents/roborev
+cp "$panel_skill_dir"/assets/roborev/*.md .agents/roborev/
+```
+
+Inspect existing files before copying over them. Adapt domain rules, guide paths, and compatibility requirements to the project. Commit `.roborev.toml` and these five files in the target repository. Put the accepted plan and approved deviations inside the reviewed checkout, or supply them through additional configured includes. Reviewers can research surrounding code and selected global skill documents, but do not inherit the coding session's conversation. Do not assume they can retrieve an external issue or PR description.
+
+### Run the final changeset review
+
+Validate the configuration, then review the complete feature against its actual base:
+
+```bash
+roborev config validate
+roborev review --branch --base main --panel feature_ready --wait
+```
+
+Replace `main` with the PR's actual base. For a stacked PR, use its parent branch or the recorded stack base. To pin an exact base and keep the job ID for later inspection:
+
+```bash
+roborev review --since <stack-base> --panel feature_ready
+roborev wait --job <parent-job-id>
+roborev show --job <parent-job-id> --json
+```
+
+Panels require the daemon; `--local` does not fan out. Inspect member statuses as well as the combined review. Worker capacity controls concurrency; optionally set global `max_workers` to at least four for this panel.
+
+The updated [`implement-code-change`](skills/implement-code-change/), [`finish-implementation-stack`](skills/finish-implementation-stack/), and [`working-with-roborev`](skills/working-with-roborev/) skills handle this final gate:
+
+1. Resolve automatic commit reviews, finish verification, and curate the implementation stack.
+2. Record the exact base and finalized head. Invoke `feature_ready` when configured; otherwise run one whole-stack review with `--panel none`. An invalid panel or failed reviewer needs diagnosis.
+3. Once final review starts, preserve the curated stack. Commit accepted corrections as normal additional commits. Do not amend, use fixup/squash commits, or rebase corrections into the reviewed history. This also applies to subsequent automatic reviews of correction commits.
+4. Explain rejected findings, comment on and close the parent review, resolve automatic reviews of correction commits, and run fresh relevant verification. Do not repeat the full panel just to review corrections.
+5. Report the reviewed head, parent job ID, and correction commits so the user can assess the panel's effect.
+
+Use a version of the installed skills containing this final-review workflow; updating RoboRev alone does not update skills. The v0.7.0 installation example above predates this gate. Until a release containing it is available, install from a source checkout containing these changes. From that checkout's root, run:
+
+```bash
+pnpm dlx skills add . --skill '*' --global --agent codex --yes
+```
+
+The complete gate is documented in [the final-review reference](skills/working-with-roborev/references/final-review.md).
+
 ## Skills
 
 ### `implement-code-change`
@@ -66,15 +180,19 @@ The [`implement-code-change`](skills/implement-code-change/) skill is the main e
 
 ### `reviewable-commits`
 
-The [`reviewable-commits`](skills/reviewable-commits/) skill treats active implementation commits and final stack curation as one workflow. It gates every completed slice on verification and commit, preserves follow-ups as targeted fixup or squash commits, and requires a coherent bottom-up review stack before completion.
+The [`reviewable-commits`](skills/reviewable-commits/) skill treats active implementation commits and final stack curation as one workflow. It gates every completed slice on verification and commit, uses targeted fixup or squash commits during implementation, and requires a coherent bottom-up review stack. Once final review starts, corrections remain normal additional commits.
 
 ### `finish-implementation-stack`
 
-The [`finish-implementation-stack`](skills/finish-implementation-stack/) skill is the required final phase for implementation work. It rechecks acceptance criteria, closes Roborev reviews, curates and verifies the final commit stack, runs fresh project verification, and ensures the branch and pull request are delivered correctly before completion.
+The [`finish-implementation-stack`](skills/finish-implementation-stack/) skill is the required final phase for implementation work. It rechecks acceptance criteria, closes automatic RoboRev reviews, curates and verifies the commit stack, runs the final changeset review with `feature_ready` when configured, preserves correction commits, and ensures fresh verification and delivery before completion.
 
 ### `setup-repo`
 
 The [`setup-repo`](skills/setup-repo/) skill establishes an explicit backwards-compatibility policy with the user, records it in `.agents/refactor-policy.md`, installs and initializes roborev, and encodes the policy in repository-specific review guidance.
+
+### `setup-roborev-panel`
+
+The explicitly invoked [`setup-roborev-panel`](skills/setup-roborev-panel/) skill installs the local `feature_ready` panel and its reusable rubrics, preserving repository settings. Its bundled configuration and templates also support manual setup. Installation does not run reviews or change global configuration.
 
 ### `working-with-roborev`
 

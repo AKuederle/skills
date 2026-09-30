@@ -1,0 +1,6 @@
+interface:
+  display_name: "Set up RoboRev panel"
+  short_description: "Configure a manual feature review panel"
+  default_prompt: "Use $setup-roborev-panel to configure this repository's feature_ready review panel."
+policy:
+  allow_implicit_invocation: false

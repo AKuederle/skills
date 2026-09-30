@@ -40,7 +40,8 @@ When a review contains relevant feedback, decide whether it warrants interruptin
 - If it can wait safely, finish the current slice and address it after the next commit.
 - If it should be handled immediately, first commit the current checkpoint when that produces a coherent, stable commit. Otherwise stash the in-progress work, address the feedback, and then restore and continue the interrupted work.
 
-Make every set of changes prompted by a roborev review in a dedicated fixup commit targeting the reviewed commit that introduced the code:
+During active implementation, before the final whole-stack review starts, make review-driven
+changes in dedicated fixup commits targeting the reviewed commit that introduced the code:
 
 ```bash
 git add path/to/affected-files
@@ -48,6 +49,10 @@ git commit --fixup=<reviewed-commit>
 ```
 
 Do not amend the reviewed commit directly. Keep the fixup commits separate during active implementation so the reviewer-driven corrections remain visible and recoverable.
+
+Once final review starts, preserve the finalized stack and use normal additional commits for
+every correction, including feedback from automatic reviews of those correction commits.
+Never autosquash or rebase these corrections into the reviewed stack or one another.
 
 After resolving a review, summarize the resolution and close the job:
 
@@ -68,24 +73,25 @@ Wait for the final commit's review with:
 roborev wait --sha HEAD
 ```
 
-Then list open jobs again, inspect completed feedback, address relevant findings in dedicated fixup commits, and repeat until no pending relevant feedback remains. Before declaring a feature complete, ensure every roborev review for its commits is closed, including reviews that produced no relevant feedback.
+Then list open jobs again, inspect completed feedback, and address relevant findings using the
+commit rules for the current phase. Repeat until no pending relevant feedback remains. Before
+declaring a feature complete, close every review for its commits, including reviews with no
+relevant findings.
 
-After all reviews are resolved and closed, use the final-stack procedure from the [reviewable-commits skill](../reviewable-commits/SKILL.md) to autosquash the Roborev fixups into their reviewed targets before final verification:
+Before final review, after all implementation reviews are resolved and closed, use the final-stack
+procedure from the [reviewable-commits skill](../reviewable-commits/SKILL.md) to autosquash the active
+implementation fixups into their targets:
 
 ```bash
 git rebase -i --autosquash <stack-base>
 ```
 
-Run final verification and the final whole-stack review against the rewritten stack.
+After final review starts, skip history curation. Retain normal correction commits and run fresh
+verification after the last correction.
 
 ## Reviewing features/branches
 
-At the end of a full implementation stack, you should ask roborev to review the full stack as a whole again:
-
-```bash
-roborev review --since abc123       # Review commits since abc123 (exclusive)
-```
-
-If this final whole-stack review produces relevant findings, address them as dedicated fixup commits targeting the commits that introduced the problems, then comment on and close the review. Run the final-stack curation procedure again so those fixups are absorbed, and repeat final verification against the newly rewritten stack before completion.
-
-Don't ask for repeated full stack reviews when addressing findings from this final review.
+After final stack curation, follow [references/final-review.md](references/final-review.md).
+Use the `feature_ready` panel if configured, otherwise a single whole-stack review. Corrections
+remain normal additional commits, including follow-up automatic review corrections. Do not
+request repeated whole-stack reviews merely to review fixes from the final review.
