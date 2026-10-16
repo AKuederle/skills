@@ -9,6 +9,26 @@ description: Use whenever the user tasks you with creating new code or refactori
 
 Choose the implementation and verification workflow from the kind of change being made.
 
+## Match Effort to Scope and Turnaround
+
+Before choosing an approach or starting a potentially expensive command, consider its expected
+elapsed time, the task's scope and risk, and whether the user needs quick iteration. Use known
+command timings when available; a rough estimate is enough. Do not spend longer estimating than
+that decision warrants.
+
+For small comments, review corrections, and narrow scope changes, prioritize fast turnaround.
+Choose the smallest sufficient implementation, inspection, and verification steps. Reuse valid
+results and completed delivery steps rather than restarting the full workflow. Avoid optional
+cleanup, repeated reviews, and broad checks that add little evidence for the current change.
+
+For large implementations, cross-cutting changes, or changes with substantial integration risk,
+allow time for deeper inspection, broader tests, and full final verification. Scale effort to the
+actual impact; a small diff can still require broad checks when it changes a shared contract.
+
+Do not skip required checks or weaken correctness to meet an arbitrary time target. When necessary
+work will materially delay a quick follow-up, explain the reason and expected cost briefly, then
+continue within the authorized scope. No new approval is needed solely because a check takes time.
+
 ## Establish Scope and a Baseline
 
 Before editing, identify the owned files, affected public interfaces, direct consumers, and the
@@ -19,6 +39,32 @@ first call site.
 Do not broaden the change or start root verification while the owned slice still lacks a stable
 focused check. If the same approach fails twice, stop retrying it. Minimize the failure, inspect the
 responsible boundary, and update the plan before another edit.
+
+## Reuse Verification Across Follow-ups
+
+Choose verification from the changes since the last verified state, not from the arrival of a user
+message or the intent to report completion. Preserve passing results across follow-ups, review
+corrections, compaction, and session restoration while their relevant inputs remain unchanged.
+
+Keep a brief verification record in the existing task state: command, result, covered code state,
+and subsequent edits that invalidate it. Record which checks remain required. Do not create a
+separate tracking system for a small task.
+
+- Questions or explanations with no file changes require no reruns.
+- Documentation or comment-only edits need applicable formatting or documentation checks, unless
+  they affect executable examples, generated output, or tooling directives.
+- Code edits require checks covering the changed behavior and affected consumers. Broaden scope
+  when shared contracts, configuration, dependencies, or test infrastructure change.
+- Run full verification at the required merge or signoff boundary, when explicitly requested, or
+  when the change's impact warrants it. Do not repeat it solely to conclude another response.
+
+Follow explicit repository verification requirements. If they mandate broader checks, satisfy
+those requirements rather than treating this guidance as an exemption. A commit-specific signoff
+must cover the required final commit; ordinary passing checks need not be rerun just because an
+unchanged tree received a new commit hash.
+
+When finishing, distinguish newly run checks from reused results and state any remaining coverage
+limits. Never present an earlier result as covering edits that invalidated it.
 
 ## Assume Competent Callers
 
@@ -117,7 +163,7 @@ When uncertain, identify the claimed user- or caller-visible outcome. If there i
 
 ## Iterate for Quality
 
-Prefer additional implementation, inspection, and verification passes over a premature handoff. Spend the time and tokens needed to make the code as clear, robust, maintainable, and complete as reasonably possible. Reducing human review effort is more important than minimizing iterations.
+Use the turnaround policy above to judge further implementation, inspection, and verification passes. Continue when another pass is likely to find a material correctness, integration, or maintainability issue. Stop when the agreed scope is complete and sufficient evidence covers it; do not add optional passes merely because more time is available.
 
 After reaching an apparently complete state, review the work again from different angles. Look for simpler designs, missing edge cases, weak abstractions, integration gaps, unnecessary complexity, and opportunities to better match the repository's established patterns. Continue iterating while another pass can produce a material improvement.
 

@@ -47,7 +47,7 @@ Project-local installation is useful for testing a new skill version in one repo
 Releases use repository-wide semantic-version tags because the implementation skills depend on one another. Install an immutable release with:
 
 ```bash
-npx skills add 'AKuederle/skills#v0.7.0' --skill '*' --global --agent codex --yes
+npx skills add 'AKuederle/skills#v0.8.0' --skill '*' --global --agent codex --yes
 ```
 
 Installations that follow the default branch can be updated with:
@@ -161,14 +161,10 @@ The updated [`implement-code-change`](skills/implement-code-change/), [`finish-i
 1. Resolve automatic commit reviews, finish verification, and curate the implementation stack.
 2. Record the exact base and finalized head. Invoke `feature_ready` when configured; otherwise run one whole-stack review with `--panel none`. An invalid panel or failed reviewer needs diagnosis.
 3. Once final review starts, preserve the curated stack. Commit accepted corrections as normal additional commits. Do not amend, use fixup/squash commits, or rebase corrections into the reviewed history. This also applies to subsequent automatic reviews of correction commits.
-4. Explain rejected findings, comment on and close the parent review, resolve automatic reviews of correction commits, and run fresh relevant verification. Do not repeat the full panel just to review corrections.
+4. Explain rejected findings, comment on and close the parent review, resolve automatic reviews of correction commits, and run missing or invalidated checks, reusing verification results that remain valid. Do not repeat the full panel just to review corrections.
 5. Report the reviewed head, parent job ID, and correction commits so the user can assess the panel's effect.
 
-Use a version of the installed skills containing this final-review workflow; updating RoboRev alone does not update skills. The v0.7.0 installation example above predates this gate. Until a release containing it is available, install from a source checkout containing these changes. From that checkout's root, run:
-
-```bash
-pnpm dlx skills add . --skill '*' --global --agent codex --yes
-```
+The final-review workflow is included in v0.8.0 and later. Install the pinned release above; updating RoboRev alone does not update skills.
 
 The complete gate is documented in [the final-review reference](skills/working-with-roborev/references/final-review.md).
 

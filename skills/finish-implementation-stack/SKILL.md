@@ -16,12 +16,18 @@ Reconstruct the task contract
 -> curate the commit stack
 -> review the final stack
 -> append review corrections without rewriting
--> verify the final result
+-> verify changes not covered by valid results
 -> deliver the branch and pull request
 -> report evidence
 ```
 
-Do not make a completion claim until every applicable implementation, commit-stack, review, verification, push, and pull-request obligation has fresh evidence.
+Do not make a completion claim until every applicable implementation, commit-stack, review, verification, push, and pull-request obligation has valid evidence. A follow-up message does not invalidate earlier evidence; reassess only obligations affected by subsequent changes.
+
+Apply the implementation skill's [turnaround policy](../implement-code-change/SKILL.md#match-effort-to-scope-and-turnaround)
+before starting expensive finishing steps. For a small follow-up to an already delivered change,
+reassess the changed scope and perform only newly required or invalidated steps. Do not restart
+completed stack curation, reviews, or full verification solely to finish another turn. Larger
+implementations and changes with broad impact warrant the full applicable finishing workflow.
 
 ## 1. Reconstruct the Task Contract
 
@@ -32,7 +38,7 @@ Read the persistent implementation plan or task state. Recover:
 - The complete acceptance-criteria checklist.
 - The stack base and intended review units.
 - The current branch, upstream, and pull request.
-- Required verification commands.
+- Required verification commands, recorded results, covered code states, and subsequent edits that invalidate them.
 - Incomplete delivery obligations.
 - The finalized stack head and final review job, if the final review has already started.
 
@@ -73,7 +79,7 @@ If the final review produces relevant findings:
 2. Address valid findings in normal additional commits, with messages explaining the correction.
 3. Comment on and close the final review, including dispositions for rejected findings.
 4. Resolve automatic reviews of correction commits with further normal additional commits.
-5. Continue to fresh verification of the complete result.
+5. Verify the corrections and any affected consumers, reusing results that remain valid.
 
 Do not amend, rebase, autosquash, reorder, or squash the reviewed stack or its correction commits.
 Retain the additional commits so the user can assess what the final review changed. This rule
@@ -81,18 +87,18 @@ also applies after compaction, retries, or a return to implementation prompted b
 
 Do not request repeated whole-stack reviews merely to review fixes from the final whole-stack review. Ensure no Roborev job for the implementation remains open before continuing.
 
-## 5. Run Fresh Final Verification
+## 5. Verify the Final Result
 
 After the last correction commit:
 
 1. Recheck every acceptance criterion against the final result.
 2. Inspect the final diff and commit graph over the exact stack range.
-3. Run the full relevant test, type-check, lint, formatting, build, packaging, and repository-specific verification commands.
+3. Apply the [verification reuse policy](../implement-code-change/SKILL.md#reuse-verification-across-follow-ups). Reuse passing results whose relevant inputs remain unchanged. Run missing or invalidated test, type-check, lint, formatting, build, packaging, and repository-specific checks. Satisfy explicit full-suite and final-commit signoff requirements at their required boundary.
 4. Check the worktree for formatter output or uncommitted task-owned changes.
 5. Confirm there are no unresolved `fixup!` or `squash!` commits.
 6. Confirm the finalized pre-review head remains an ancestor and its commits were not rewritten.
 
-Do not infer full success from partial checks or verification run before the final correction.
+Confirm that the combined evidence covers the final result. Earlier checks remain valid only for inputs unaffected by later corrections. Do not infer full-suite success from a selected subset, or restart the entire verification sequence solely because the user added a comment or you are reporting completion again.
 
 ## 6. Deliver the Branch and Pull Request
 
@@ -117,7 +123,7 @@ Report concisely:
 - The final commit stack.
 - The final panel or fallback review job, finalized pre-review head, and additional correction commits.
 - Acceptance-criteria coverage.
-- Verification commands and results.
+- Verification commands and results, distinguishing newly run checks from reused evidence and noting coverage limits.
 - Roborev closure state.
 - Branch push and pull-request state, including the pull-request link when applicable.
 - Any intentionally deferred work or explicit blocker.
