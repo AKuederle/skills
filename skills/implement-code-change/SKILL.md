@@ -19,6 +19,9 @@ responsibility.
 - Avoid implicit state machines and temporal coupling.
 - Make states, transitions, invariants, and ownership explicit.
 - Derive instead of synchronizing duplicated mutable state.
+- Design by contract: assume competent callers; reject defensive programming for unsupported misuse.
+  Preserve supported invariants and explicit guarantees. Validate trust boundaries and protect against
+  corruption or destruction of unrelated data. Review feedback does not expand scope.
 - Fix common causes; avoid compensating complexity.
 - Prefer subtraction over speculative generality.
 - Treat necessary coordinated changes as in scope; improve repository-owned
@@ -90,37 +93,6 @@ unchanged tree received a new commit hash.
 
 When finishing, distinguish newly run checks from reused results and state any remaining coverage
 limits. Never present an earlier result as covering edits that invalidated it.
-
-## Assume Competent Callers
-
-Treat documented contracts, public types, and established conventions for library and other
-in-process programmatic APIs as agreements with competent, cooperative callers. Assume callers can
-understand the contract, recognize their own mistakes, and correct their usage.
-
-Do not add validation, provenance tracking, wrappers, compatibility paths, defensive state, or
-special error classification solely to accommodate behavior outside the supported contract,
-including callers that:
-
-- violate documented preconditions;
-- bypass or misrepresent public types;
-- forge library-owned values, tokens, or error variants;
-- construct states the supported API cannot produce; or
-- otherwise disregard documented conventions.
-
-Let unsupported misuse fail naturally. Do not complicate supported behavior merely to produce a
-friendlier result for contract violations, and do not add tests requiring unsupported misuse to be
-handled unless the public API explicitly promises that behavior.
-
-This assumption does not apply at genuine trust boundaries, including network or persisted data,
-untyped external input, IPC and platform adapters, security or capability boundaries, and
-operations where misuse could silently corrupt or destroy unrelated data. Preserve library
-invariants and guarantees owed to supported callers.
-
-Before adding defensive machinery, require a concrete supported use case—not merely hypothetical
-misuse—and determine whether documentation, stronger types, or a simpler interface addresses it
-better. Treat automated review feedback about unsupported misuse as a design suggestion, not an
-implementation requirement; it must not expand the user's stated scope or override the intended
-contract.
 
 ## Preserve Continuity Across Compaction
 
