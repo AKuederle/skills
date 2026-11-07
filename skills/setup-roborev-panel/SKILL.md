@@ -79,10 +79,8 @@ roborev review --branch --base <feature-base> --panel feature_ready --wait
 
 Alternatively pin the finalized stack base with
 `roborev review --since <stack-base> --panel feature_ready`. Panels use the daemon;
-`--local` does not fan out. Existing global implementation and finishing skills own the
-final-review lifecycle: curate the stack before review, record its head and review job,
-and retain accepted corrections as normal additional commits without amending,
-fixup/squash, or rebasing them into the reviewed history. This also applies to automatic
-reviews of correction commits. Installing the panel does not install that workflow;
-report if the target agent's global skills do not contain it rather than inserting
+`--local` does not fan out. [implement-code-change](../implement-code-change/SKILL.md)
+owns readiness review and user-triggered finalization. Preserve user-feedback and review
+corrections as normal follow-up commits; parent-branch rebases remain allowed. Installing
+the panel does not install that workflow. Report if it is missing rather than inserting
 implementation instructions into project guides or rubrics.

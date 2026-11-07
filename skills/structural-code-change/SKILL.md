@@ -7,7 +7,9 @@ description: Use whenever the user tasks you with simple behavior-preserving ref
 
 Use this workflow for changes that preserve behavior or are checked better by development tooling. Do explicitly not use TDD for trivial changes with obvious outcomes and limited impact. Do not manufacture a red-green cycle.
 
-Before planning or editing the change, read the standalone [backwards-compatibility skill](../backwards-compatibility/SKILL.md) completely unless it is already loaded for the current task. Follow the repository policy and refactoring-quality rules it provides throughout this workflow.
+Before planning or editing, read the [refactor policy](../implement-code-change/references/refactor-policy.md)
+unless it is already loaded for this task. Use [implement-code-change](../implement-code-change/SKILL.md)
+for commits, review, and delivery.
 
 ## Refactor Under Green
 
