@@ -98,6 +98,13 @@ The former `reviewable-commits`, `working-with-roborev`, `finish-implementation-
 `backwards-compatibility` skills are consolidated into this router's references. When upgrading,
 remove those retired installed skills so their older workflows do not remain active.
 
+### `handling-pr-reviews`
+
+[`handling-pr-reviews`](skills/handling-pr-reviews/) retrieves complete GitHub feedback, tracks
+requests and dispositions, and delegates scoped corrections within the parent workflow. It adapts
+the ONE-local skill without command recipes, mandatory plan templates, or fixed test reruns.
+Replace older repository-local copies after installing the shared version so they no longer shadow it.
+
 ### `cleanup-codebase`
 
 [`cleanup-codebase`](skills/cleanup-codebase/) finds common causes of structural problems and

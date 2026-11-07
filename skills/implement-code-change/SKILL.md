@@ -34,7 +34,8 @@ handoff.
    merge authorization.
 6. **Integrate feedback.** User-requested corrections always stay separate follow-up commits,
    including before readiness. Preserve full-range-review corrections too. Parent rebases remain
-   allowed; preserve units and revalidate changed resolutions.
+   allowed; preserve units and revalidate changed resolutions. For GitHub comments and reviews, use
+   [handling-pr-reviews](../handling-pr-reviews/SKILL.md).
 7. **Finalize on user instruction.** Follow [finalization](references/finalization.md): delegate
    cleanup within this PR and assigned responsibilities, remove disposable artifacts, request final
    range review, finalize the PR description, run final CI, merge. Use judgment on renewed approval
