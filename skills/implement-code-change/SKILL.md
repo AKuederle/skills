@@ -18,10 +18,21 @@ responsibility.
 - Optimize for locality of reasoning and change.
 - Avoid implicit state machines and temporal coupling.
 - Make states, transitions, invariants, and ownership explicit.
+- Derive instead of synchronizing duplicated mutable state.
 - Fix common causes; avoid compensating complexity.
 - Prefer subtraction over speculative generality.
 - Treat necessary coordinated changes as in scope; improve repository-owned
   APIs and their consumers together. Discuss large scope expansions.
+
+## Tips
+
+- Start from a skeleton: generate temporary views without function bodies to fit large areas in context.
+- Summarize with subagents: use focused summaries to reason across large areas when delegation is authorized.
+- Map dependencies: script what imports what and refresh the graph around structural changes.
+- Enter where leverage is highest: start where one improvement simplifies the most callers.
+- Design it twice: sketch two materially different interfaces before committing to a difficult design.
+- Apply the deletion test: imagine removing an abstraction. Does complexity disappear or return to its callers?
+- Build the lever: automate repetitive edits with a codemod or script; verify one transformation before applying it broadly.
 
 ## Match Effort to Scope and Turnaround
 
