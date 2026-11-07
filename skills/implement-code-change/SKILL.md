@@ -5,9 +5,12 @@ description: Use whenever the user tasks you with creating new code or refactori
 
 # Implement Code Changes
 
-## Core Principle
+## Vision
 
-Choose the implementation and verification workflow from the kind of change being made.
+Implement the requested behavior in a design that is easy to use correctly, reason about locally,
+and change safely. Optimize for the engineers and agents who will make the next change: they
+should need less context, encounter fewer hidden dependencies, and find one clear home for each
+responsibility.
 
 ## Design
 
