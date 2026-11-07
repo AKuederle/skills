@@ -4,8 +4,8 @@ Before implementation, check RoboRev works; report broken/missing setup and use
 [setup-repo](../../setup-repo/SKILL.md), never silently skip review. Panel setup is optional and
 manual through [setup-roborev-panel](../../setup-roborev-panel/SKILL.md).
 
-Every commit needs a job; enqueue `roborev review <sha>` if the hook missed it. Implement while
-reviews run; inspect at natural pauses:
+Automatic hooks create commit review jobs. Implement while reviews run; inspect results at natural
+pauses:
 
 ```bash
 roborev list --status running --status queued --status done --open
@@ -29,6 +29,6 @@ roborev wait --job <job-id>
 roborev show --job <job-id> --json
 ```
 
-Panels need the daemon, not `--local`. Inspect member statuses. Resolve findings and
+Inspect member statuses. Resolve findings and
 correction-commit reviews, then close jobs. Preserve corrections. Repeat range review when broader
 evidence is invalidated, not merely for its fixes; finalization remains a separate gate.

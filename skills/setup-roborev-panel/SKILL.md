@@ -46,6 +46,6 @@ roborev review --branch --base <base> --panel feature_ready --wait
 roborev review --since <base> --panel feature_ready
 ```
 
-Panels use the daemon, not `--local`. [implement-code-change](../implement-code-change/SKILL.md) owns delivery,
+[implement-code-change](../implement-code-change/SKILL.md) owns delivery,
 preserved correction commits, and permitted parent rebases; report a missing workflow rather than
 inserting it into project guides/rubrics.

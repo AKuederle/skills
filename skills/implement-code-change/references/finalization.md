@@ -16,7 +16,10 @@ interruption.
    consumers.
 4. Judge whether changes materially alter approval; summarize and obtain renewed approval when
    warranted. Otherwise use the existing merge instruction.
-5. Finalize PR description with outcome/decisions/evidence. Run required final CI/signoff after
+5. Describe the actual final changes precisely in the PR description. Keep it concise; omit PR
+   history and routine process narration such as formatting/testing steps. Include evidence that
+   explains impact, such as UI screenshots, relevant benchmarks, or test findings that substantiate
+   behavior changes. Run required final CI/signoff after
    reviews/revisions are resolved; reuse valid checks where allowed. Fix failures and revalidate
    evidence, confirm PR base/head, then merge/report only with no unresolved checks/reviews.
 
