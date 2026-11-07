@@ -18,7 +18,14 @@ cycle or add a test merely to record the diff.
 
 ## What a good test is
 
-Tests verify behavior through public interfaces, not implementation details. Code can change entirely; tests shouldn't. A good test reads like a specification — "user can checkout with valid cart" tells you exactly what capability exists — and survives refactors because it doesn't care about internal structure.
+Tests verify supported behavior through public interfaces.
+
+- Prefer high-level behavioral and integration tests over highly mocked
+  lower-level tests.
+- Keep tests structure-insensitive, deterministic, and isolated.
+- Use independent test oracles.
+- DAMP over DRY.
+- Name the regression a new test would detect before deciding to write it.
 
 See [tests.md](tests.md) for examples and [mocking.md](mocking.md) for mocking guidelines.
 

@@ -130,15 +130,6 @@ Use this commit workflow during active implementation. The required finishing ha
 
 When the requested work refactors, replaces, or modifies existing code or interfaces, read the standalone [backwards-compatibility skill](../backwards-compatibility/SKILL.md) completely before planning the change and follow it throughout the task.
 
-## Tests
-
-- Prefer high-level behavioral and integration tests over highly mocked
-  lower-level tests.
-- Keep tests structure-insensitive, deterministic, and isolated.
-- Use independent test oracles.
-- DAMP over DRY.
-- Name the regression a new test would detect before deciding to write it.
-
 ## Route the Change
 
 Classify each requested change before writing a test.
