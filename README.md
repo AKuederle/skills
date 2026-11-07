@@ -132,7 +132,7 @@ The [`tdd`](skills/tdd/) directory adapts the upstream [TDD skill from mattpococ
 
 ### `codebase-design`
 
-The [`codebase-design`](skills/codebase-design/) directory adapts the upstream [codebase-design skill from mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills/engineering/codebase-design), originally copied at `9603c1cc8118d08bc1b3bf34cf714f62178dea3b` on 2026-07-20. It owns the design vision, principles and techniques, with concise references for deepening modules and comparing interfaces. Implementation workflow and test quality remain in their companion skills.
+The [`codebase-design`](skills/codebase-design/) directory adapts the upstream [codebase-design skill from mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills/engineering/codebase-design), originally copied at `9603c1cc8118d08bc1b3bf34cf714f62178dea3b` on 2026-07-20. It owns the design vision, principles and techniques, including inline guidance for deepening modules and comparing interfaces. Implementation workflow and test quality remain in their companion skills.
 
 ### `unslop`
 
