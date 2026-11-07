@@ -1,77 +1,53 @@
-# Good and Bad Tests
+# Test-quality examples
 
-## Good Tests
+## Observable behavior
 
-**Integration-style**: Test through real interfaces, not mocks of internal parts.
-
-```typescript
-// GOOD: Tests observable behavior
-test("user can checkout with valid cart", async () => {
-  const cart = createCart();
-  cart.add(product);
-  const result = await checkout(cart, paymentMethod);
-  expect(result.status).toBe("confirmed");
-});
-```
-
-Characteristics:
-
-- Tests behavior users/callers care about
-- Uses public API only
-- Survives internal refactors
-- Describes WHAT, not HOW
-- One logical assertion per test
-
-## Bad Tests
-
-**Implementation-detail tests**: Coupled to internal structure.
+Prefer a caller-visible result over an internal helper assertion:
 
 ```typescript
-// BAD: Tests implementation details
-test("checkout calls paymentService.process", async () => {
-  const mockPayment = jest.mock(paymentService);
-  await checkout(cart, payment);
-  expect(mockPayment.process).toHaveBeenCalledWith(cart.total);
-});
+const user = await createUser({ name: 'Alice' });
+expect((await getUser(user.id)).name).toBe('Alice');
 ```
 
-Red flags:
+A database read is appropriate when database persistence is itself the contract. An internal
+method call is not a contract merely because a spy can observe it. Likewise, a payment request's
+amount or count can be the exact behavior a caller needs guaranteed.
 
-- Mocking internal collaborators
-- Testing private methods
-- Asserting on call counts/order
-- Test breaks when refactoring without behavior change
-- Test name describes HOW not WHAT
-- Verifying through external means instead of interface
+## Boundary effects and positive controls
+
+To verify that an empty cart never charges, observe the payment request through a recording test
+double while running the real checkout logic. Include a valid-cart case that does charge, proving
+that the observation can detect the effect. Assert the promised amount and count. Do not replace
+checkout with a mock and then assert what that mock was configured to return.
+
+Choose doubles for the control the test needs, rather than a rule about which dependency category
+must be mocked. If setup requires recreating substantial application logic, reconsider the test
+interface or use real collaborators in an integration test.
+
+## Independent oracles
+
+This expectation cannot detect a deterministic calculation bug:
 
 ```typescript
-// BAD: Bypasses interface to verify
-test("createUser saves to database", async () => {
-  await createUser({ name: "Alice" });
-  const row = await db.query("SELECT * FROM users WHERE name = ?", ["Alice"]);
-  expect(row).toBeDefined();
-});
-
-// GOOD: Verifies through interface
-test("createUser makes user retrievable", async () => {
-  const user = await createUser({ name: "Alice" });
-  const retrieved = await getUser(user.id);
-  expect(retrieved.name).toBe("Alice");
-});
+const expected = calculateTotal(items);
+expect(calculateTotal(items)).toBe(expected);
 ```
 
-**Tautological tests**: Expected value restates the implementation, so the test passes by construction.
+A worked example provides an independent expectation:
 
 ```typescript
-// BAD: Expected value is recomputed the way the code computes it
-test("calculateTotal sums line items", () => {
-  const items = [{ price: 10 }, { price: 5 }];
-  const expected = items.reduce((sum, i) => sum + i.price, 0);
-  expect(calculateTotal(items)).toBe(expected);
-});
-
-// GOOD: Expected value is an independent, known literal
-test("calculateTotal sums line items", () => {
-  expect(calculateTotal([{ price: 10 }, { price: 5 }])).toBe(15);
-});
+expect(calculateTotal([{ price: 10 }, { price: 5 }])).toBe(15);
 ```
+
+An independent reference model or calculation can also be useful. Repeating the production
+algorithm is weaker because the same misunderstanding can appear on both sides; it is not
+necessarily an assertion that can never fail.
+
+## One behavior and DAMP
+
+A transfer test can assert both the sender's debit and the recipient's credit. Those assertions
+establish one behavior. Keep relevant amounts and expectations visible in the scenario; extract
+setup only when it improves readability without hiding the contract.
+
+For a cancellation race, control readiness with a barrier and observe the promised result and
+absence of later publication. A sleep followed by an incidental internal-state check is weaker.

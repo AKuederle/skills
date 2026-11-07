@@ -204,7 +204,7 @@ The [`structural-code-change`](skills/structural-code-change/) skill handles beh
 
 ### `tdd`
 
-The [`tdd`](skills/tdd/) directory is a faithful copy of the upstream [TDD skill from mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills/engineering/tdd), including its test-style, mocking, and OpenAI interface files. The copy was checked against upstream `main` on 2026-07-20.
+The [`tdd`](skills/tdd/) directory adapts the upstream [TDD skill from mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills/engineering/tdd), originally copied on 2026-07-20. It uses concise behavioral-test guidance, a red–green–refactor loop, and one [examples reference](skills/tdd/tests.md), with static verification for mechanical edits.
 
 ### `codebase-design`
 

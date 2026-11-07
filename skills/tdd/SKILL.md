@@ -3,56 +3,56 @@ name: tdd
 description: Test-driven development for supported behavior changes and bug fixes. Use when the user asks for test-first work, red-green-refactor, or integration tests. Do not use for mechanical changes that static tooling and existing tests already verify.
 ---
 
-# Test-Driven Development
+# Test-driven development
 
-TDD is the red → green loop. This skill is the reference that makes that loop produce tests worth keeping: what a good test is, where tests go, the anti-patterns, and the rules of the loop. Every section applies on every cycle — consult them before and during the loop, not after.
+Make supported behavior executable through a meaningful interface. Use the repository's domain
+vocabulary and respect relevant ADRs.
 
-When exploring the codebase, read `CONTEXT.md` (if it exists) so test names and interface vocabulary match the project's domain language, and respect ADRs in the area you're touching.
+## Test quality
 
-## When TDD does not apply
-
-TDD requires supported behavior that can fail. Mechanical changes such as renames, moves, import
-updates, formatting, and other behavior-preserving edits do not require new test coverage. Verify
-them with the compiler, linter, build, and relevant existing tests. Do not manufacture a red-green
-cycle or add a test merely to record the diff.
-
-## What a good test is
-
-Tests verify supported behavior through public interfaces.
-
-- Prefer high-level behavioral and integration tests over highly mocked
-  lower-level tests.
+- Prefer high-level behavioral and integration tests over highly mocked lower-level tests.
 - Keep tests structure-insensitive, deterministic, and isolated.
 - Use independent test oracles.
 - DAMP over DRY.
 - Name the regression a new test would detect before deciding to write it.
+- Focus each test on one behavior; use multiple assertions when they establish that behavior.
+- Keep the behavior under test real. Use test doubles where they improve control without
+  replacing the behavior being verified.
 
-See [tests.md](tests.md) for examples and [mocking.md](mocking.md) for mocking guidelines.
+See [tests.md](tests.md) for examples when choosing observations, test doubles, or expected values.
 
-## Seams — where tests go
+## Choose the interface
 
-A **seam** is the public boundary you test at: the interface where you observe behavior without reaching inside. Tests live at seams, never against internals.
+Test through supported interfaces within the agreed scope. State what the chosen interface catches
+and misses. Discuss consequential testing or scope decisions; routine tests need no separate approval.
+Consult `codebase-design` when the interface itself needs redesign.
 
-**Test only at pre-agreed seams.** Before writing any test, write down the seams under test and confirm them with the user. No test is written at an unconfirmed seam. You can't test everything — agreeing the seams up front is how testing effort lands on the critical paths and complex logic instead of every edge case.
+The contract determines observable behavior. Return values, errors, persisted state and boundary
+effects can all matter. Call counts, ordering and database reads are valid observations when the
+contract concerns those effects, rather than incidental internal collaboration.
 
-Ask: "What's the public interface, and which seams should we test?"
+## Red–green–refactor
 
-## Anti-patterns
+Work in vertical slices:
 
-- **Implementation-coupled** — mocks internal collaborators, tests private methods, or verifies through a side channel (querying the database instead of using the interface). The tell: the test breaks when you refactor but behavior hasn't changed.
-- **Tautological** — the assertion recomputes the expected value the way the code does (`expect(add(a, b)).toBe(a + b)`, a snapshot derived by hand the same way, a constant asserted equal to itself), so it passes by construction and can never disagree with the code. Expected values must come from an independent source of truth — a known-good literal, a worked example, the spec.
-- **Compiler-redundant.** The assertion repeats an explicit type annotation, schema generic, function
-  signature, or other contract the compiler already enforces. Type tests are justified only when
-  they protect non-trivial inference, overload selection, generic correlation, or a capability
-  boundary that the declarations do not enforce by themselves.
-- **Low-signal.** The test freezes incidental details such as CSS classes, internal structure,
-  literal defaults, or export inventories without proving supported behavior. Name a plausible
-  defect that passes static checks but fails this test. If none exists, use the direct static check
-  and omit the test.
-- **Horizontal slicing** — writing all tests first, then all implementation. Bulk tests verify _imagined_ behavior: you test the _shape_ of things rather than user-facing behavior, the tests go insensitive to real changes, and you commit to test structure before understanding the implementation. Work in **vertical slices** instead — one test → one implementation → repeat, each test a **tracer bullet** that responds to what the last cycle taught you.
+1. **Red:** write one focused behavior test and confirm it fails for the intended reason.
+2. **Green:** implement enough to satisfy it while preserving existing contracts; run affected tests.
+3. **Refactor:** improve the design under green, without changing behavior. Repeat.
 
-## Rules of the loop
+Control time, randomness, readiness and shared state where they affect repeatability. Derive
+expectations independently of the implementation under test, using the contract, worked examples,
+trusted fixtures or an independent model. A separate calculation can be valid; duplicating the
+implementation's algorithm risks reproducing its mistake.
 
-- **Red before green.** Write the failing test first, then only enough code to pass it. Don't anticipate future tests or add speculative features.
-- **One slice at a time.** One seam, one test, one minimal implementation per cycle.
-- **Refactoring is not part of the loop.** It belongs to the review stage (see the `code-review` skill), not the red → green implementation cycle.
+## Avoid low-value coverage
+
+- **Implementation coupling:** freezes private structure or incidental internal call sequences.
+- **Tautological assertions:** reuse the code under test to produce the expected result.
+- **Compiler-redundant checks:** repeat facts already enforced by declarations. Type tests can
+  protect non-trivial inference, overload selection, generic correlation or capability boundaries.
+- **Change detectors:** freeze source text, constants or export inventories without proving behavior.
+- **Horizontal slicing:** write a batch of speculative tests before learning from implementation.
+
+For mechanical edits, use static checks and relevant existing tests. Do not manufacture a red–green
+cycle or permanent coverage merely to record the diff. Before adding a test, identify a plausible
+bug it catches that the compiler and existing checks do not.
