@@ -31,13 +31,17 @@ The contract determines observable behavior. Return values, errors, persisted st
 effects can all matter. Call counts, ordering and database reads are valid observations when the
 contract concerns those effects, rather than incidental internal collaboration.
 
-## Red–green–refactor
+## Behavioral increments
 
-Work in vertical slices:
+- Work in caller-visible behavioral increments, not implementation-sized steps.
+- Prefer a meaningful integration test to drive each increment.
+- For behavioral fixes, confirm the test fails for the intended reason before the fix and passes afterward.
+- Use temporary probes or focused tests for diagnosis when useful.
 
-1. **Red:** write one focused behavior test and confirm it fails for the intended reason.
-2. **Green:** implement enough to satisfy it while preserving existing contracts; run affected tests.
-3. **Refactor:** improve the design under green, without changing behavior. Repeat.
+Preserve regression coverage while restructuring code. Clean tests afterward: rewrite
+implementation-coupled tests around behavior, retire superseded tests, and verify that the retained
+suite still protects supported behavior. Retain tests for their ongoing regression value, not their
+development history.
 
 Control time, randomness, readiness and shared state where they affect repeatability. Derive
 expectations independently of the implementation under test, using the contract, worked examples,
