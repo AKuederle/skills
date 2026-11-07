@@ -1,46 +1,29 @@
 ---
 name: codebase-design
-description: Design deep modules, coherent interfaces, and explicit state ownership. Use when implementing new behavior, changing interfaces or dependencies, restructuring code, or assessing design quality. Supplies design guidance; implementation workflow and testing belong to their companion skills.
+description: Design deep modules, coherent interfaces, and explicit ownership for new behavior, interface/dependency changes, restructuring, and design review. Companion skills own implementation workflow and testing.
 ---
 
 # Codebase design
 
-## Vision
+Make requested behavior easy to use correctly, reason about locally, and change safely. Future
+engineers and agents should need less context and find one owner per responsibility.
 
-Implement the requested behavior in a design that is easy to use correctly, reason about locally,
-and change safely. Optimize for the engineers and agents who will make the next change: they
-should need less context, encounter fewer hidden dependencies, and find one clear home for each
-responsibility.
-
-## Design guidance
-
-- Interface-first design. Prefer deep modules and information hiding.
-- Optimize for locality of reasoning and change.
-- Avoid implicit state machines and temporal coupling.
-- Make states, transitions, invariants, and ownership explicit.
-- Derive instead of synchronizing duplicated mutable state.
+- Interface-first design: deep modules and information hiding.
+- Locality of reasoning and change; explicit states, transitions, invariants, and ownership.
+- Avoid implicit state machines and temporal coupling. Derive rather than synchronize duplicated
+  mutable state.
 - Design by contract: assume competent callers; reject defensive programming for unsupported misuse.
-  Preserve supported invariants and explicit guarantees. Validate trust boundaries and protect against
-  corruption or destruction of unrelated data. Review feedback does not expand scope.
-- Fix common causes; avoid compensating complexity.
-- Prefer subtraction over speculative generality.
+  Preserve supported invariants and explicit guarantees. Validate trust boundaries and protect
+  against corruption or destruction of unrelated data. Review feedback does not expand scope.
+- Fix common causes; prefer subtraction over speculative generality.
 
-An interface includes everything callers must know: types, invariants, ordering, errors and
-configuration. Judge depth by useful behavior and hidden coordination, not implementation size
-or call-chain length. Use the repository's domain vocabulary.
+An interface includes types, invariants, ordering, errors, and configuration. Depth hides caller
+coordination, not merely code. Use domain vocabulary.
 
-## Tips
+Tips: temporary skeleton views; authorized focused subagent summaries; refreshed dependency graphs;
+start at highest leverage; compare materially different interfaces; deletion test: does complexity
+disappear or return to callers?
 
-- Start from a skeleton: generate temporary views without function bodies to fit large areas in context.
-- Summarize with subagents: use focused summaries to reason across large areas when delegation is authorized.
-- Map dependencies: script what imports what and refresh the graph around structural changes.
-- Enter where leverage is highest: start where one improvement simplifies the most callers.
-- Design it twice: sketch two materially different interfaces before committing to a difficult design.
-- Apply the deletion test: imagine removing an abstraction. Does complexity disappear or return to its callers?
-
-## References
-
-- For restructuring a coupled cluster, read [DEEPENING.md](DEEPENING.md).
-- For a difficult interface decision, read [DESIGN-IT-TWICE.md](DESIGN-IT-TWICE.md).
-- For implementation work, follow [implement-code-change](../implement-code-change/SKILL.md) for scope, commits, reviews and delivery.
-- Follow [TDD](../tdd/SKILL.md) for behavioral verification and test quality.
+For coupled clusters read [DEEPENING](DEEPENING.md); for consequential interface choices read
+[DESIGN-IT-TWICE](DESIGN-IT-TWICE.md). [implement-code-change](../implement-code-change/SKILL.md)
+owns delivery; [TDD](../tdd/SKILL.md) owns behavior verification/test quality.

@@ -1,62 +1,32 @@
 ---
 name: tdd
-description: Test-driven development for supported behavior changes and bug fixes. Use when the user asks for test-first work, red-green-refactor, or integration tests. Do not use for mechanical changes that static tooling and existing tests already verify.
+description: Test supported behavior changes and bugs through behavioral increments. Use for test-first work and integration tests, not mechanical edits covered by tooling/existing tests.
 ---
 
-# Test-driven development
+# TDD
 
-Make supported behavior executable through a meaningful interface. Use the repository's domain
-vocabulary and respect relevant ADRs.
+Use supported interfaces, domain vocabulary, and relevant ADRs. Explain what the interface
+catches/misses; discuss consequential scope/testing choices, not routine seam approvals. Consult
+[codebase-design](../codebase-design/SKILL.md) for redesign.
 
-## Test quality
+- Prefer high-level behavioral/integration tests to highly mocked units.
+- Structure-insensitive, deterministic, isolated tests; independent oracles; DAMP over DRY.
+- Name the regression before deciding to write a test. One behavior can need multiple assertions.
+- Keep tested behavior real; doubles provide control without replacing it. The contract determines
+  observable results, errors, persistence, and effects, including call counts/order when promised.
 
-- Prefer high-level behavioral and integration tests over highly mocked lower-level tests.
-- Keep tests structure-insensitive, deterministic, and isolated.
-- Use independent test oracles.
-- DAMP over DRY.
-- Name the regression a new test would detect before deciding to write it.
-- Focus each test on one behavior; use multiple assertions when they establish that behavior.
-- Keep the behavior under test real. Use test doubles where they improve control without
-  replacing the behavior being verified.
+Work in caller-visible behavioral increments, preferably driven by a meaningful integration test,
+not implementation-sized steps. For bug fixes, prove failure for the intended reason before the fix
+and success after. Temporary diagnostic probes are fine. Preserve coverage during refactoring;
+afterward rewrite implementation-coupled tests and retire superseded ones while preserving distinct
+behavior. Tests serve ongoing regression value, not development history.
 
-See [tests.md](tests.md) for examples when choosing observations, test doubles, or expected values.
+Control time/randomness/readiness/shared state. Derive expectations from contracts, worked examples,
+trusted fixtures, or independent models, not the tested code. Duplicating its algorithm is weaker,
+not always incapable of failure.
 
-## Choose the interface
-
-Test through supported interfaces within the agreed scope. State what the chosen interface catches
-and misses. Discuss consequential testing or scope decisions; routine tests need no separate approval.
-Consult `codebase-design` when the interface itself needs redesign.
-
-The contract determines observable behavior. Return values, errors, persisted state and boundary
-effects can all matter. Call counts, ordering and database reads are valid observations when the
-contract concerns those effects, rather than incidental internal collaboration.
-
-## Behavioral increments
-
-- Work in caller-visible behavioral increments, not implementation-sized steps.
-- Prefer a meaningful integration test to drive each increment.
-- For behavioral fixes, confirm the test fails for the intended reason before the fix and passes afterward.
-- Use temporary probes or focused tests for diagnosis when useful.
-
-Preserve regression coverage while restructuring code. Clean tests afterward: rewrite
-implementation-coupled tests around behavior, retire superseded tests, and verify that the retained
-suite still protects supported behavior. Retain tests for their ongoing regression value, not their
-development history.
-
-Control time, randomness, readiness and shared state where they affect repeatability. Derive
-expectations independently of the implementation under test, using the contract, worked examples,
-trusted fixtures or an independent model. A separate calculation can be valid; duplicating the
-implementation's algorithm risks reproducing its mistake.
-
-## Avoid low-value coverage
-
-- **Implementation coupling:** freezes private structure or incidental internal call sequences.
-- **Tautological assertions:** reuse the code under test to produce the expected result.
-- **Compiler-redundant checks:** repeat facts already enforced by declarations. Type tests can
-  protect non-trivial inference, overload selection, generic correlation or capability boundaries.
-- **Change detectors:** freeze source text, constants or export inventories without proving behavior.
-- **Horizontal slicing:** write a batch of speculative tests before learning from implementation.
-
-For mechanical edits, use static checks and relevant existing tests. Do not manufacture a red–green
-cycle or permanent coverage merely to record the diff. Before adding a test, identify a plausible
-bug it catches that the compiler and existing checks do not.
+Reject private-structure/change-detector tests, tautological expectations, speculative horizontal
+batches, and compiler-redundant checks. Keep meaningful type tests for inference, overloads, generic
+correlation, or capability boundaries. For mechanical work use static/existing checks; no
+manufactured red-green or permanent diff tests. Read [tests.md](tests.md) for observations, doubles,
+and oracle examples.

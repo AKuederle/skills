@@ -88,6 +88,9 @@ and finalize only on the user's merge instruction. Its references own commit, Ro
 and finalization mechanics. User-feedback corrections stay as follow-up commits; parent rebases remain
 allowed. The agent judges whether cleanup warrants renewed merge approval.
 
+Subagents apply the guidance within their assignment and return a focused handoff. The parent owns
+the main workflow unless it explicitly delegates those responsibilities.
+
 It routes design to `codebase-design`, behavioral testing to `tdd`, mechanical changes to
 `structural-code-change`, and scoped final cleanup to `cleanup-codebase`.
 
