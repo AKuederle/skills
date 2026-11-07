@@ -9,6 +9,17 @@ description: Use whenever the user tasks you with creating new code or refactori
 
 Choose the implementation and verification workflow from the kind of change being made.
 
+## Design
+
+- Interface-first design. Prefer deep modules and information hiding.
+- Optimize for locality of reasoning and change.
+- Avoid implicit state machines and temporal coupling.
+- Make states, transitions, invariants, and ownership explicit.
+- Fix common causes; avoid compensating complexity.
+- Prefer subtraction over speculative generality.
+- Treat necessary coordinated changes as in scope; improve repository-owned
+  APIs and their consumers together. Discuss large scope expansions.
+
 ## Match Effort to Scope and Turnaround
 
 Before choosing an approach or starting a potentially expensive command, consider its expected
@@ -133,6 +144,15 @@ Use this commit workflow during active implementation. The required finishing ha
 
 When the requested work refactors, replaces, or modifies existing code or interfaces, read the standalone [backwards-compatibility skill](../backwards-compatibility/SKILL.md) completely before planning the change and follow it throughout the task.
 
+## Tests
+
+- Prefer high-level behavioral and integration tests over highly mocked
+  lower-level tests.
+- Keep tests structure-insensitive, deterministic, and isolated.
+- Use independent test oracles.
+- DAMP over DRY.
+- Name the regression a new test would detect before deciding to write it.
+
 ## Route the Change
 
 Classify each requested change before writing a test.
@@ -171,11 +191,7 @@ Stop and reconvene with the user when implementation reveals significant scope o
 This includes cases where:
 
 - completing the task requires work outside the agreed scope;
-- the plan or acceptance criteria no longer describe a sound implementation;
-- the apparent solution is a workaround for a weak existing or proposed API;
-- the design forces repeated adapters, special cases, duplicated state, or other complexity that
-  points to a missing abstraction or misplaced responsibility; or
-- a cleaner solution requires a meaningful API, architecture, compatibility, or ownership decision.
+- the plan or acceptance criteria no longer describe a sound implementation.
 
 Do not broaden the scope merely because one technical path appears clear. Do not hide the friction
 inside a workaround or silently ship a knowingly weak design to keep the diff small. Preserve the
