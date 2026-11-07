@@ -1,0 +1,4 @@
+interface:
+  display_name: "Clean up a change"
+  short_description: "Untangle scoped changes and remove obsolete baggage"
+  default_prompt: "Use $cleanup-codebase to leave this change clean and coherent within the assigned scope."

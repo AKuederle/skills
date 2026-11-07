@@ -1,205 +1,42 @@
 ---
 name: implement-code-change
-description: Use whenever the user tasks you with creating new code or refactoring existing code in any serious code repository, and whenever resuming or continuing such a task after context compaction or session restoration. Re-read this skill before continuing implementation after either event.
+description: Coordinate serious code changes through alignment, implementation, review, feedback, and user-triggered finalization. Resume the recorded phase after interruptions.
 ---
 
-# Implement Code Changes
+# Implement code changes
 
-## Core Principle
+Scale effort to scope and risk. Feedback can arrive in any phase.
 
-Choose the implementation and verification workflow from the kind of change being made.
+When delegated, apply this guidance within your assignment; do not independently restart the main
+workflow. Unless explicitly assigned otherwise, the parent owns cross-slice integration, stack
+curation, full verification, PRs, readiness/finalization reviews, and merge. Return a focused
+handoff.
 
-## Match Effort to Scope and Turnaround
-
-Before choosing an approach or starting a potentially expensive command, consider its expected
-elapsed time, the task's scope and risk, and whether the user needs quick iteration. Use known
-command timings when available; a rough estimate is enough. Do not spend longer estimating than
-that decision warrants.
-
-For small comments, review corrections, and narrow scope changes, prioritize fast turnaround.
-Choose the smallest sufficient implementation, inspection, and verification steps. Reuse valid
-results and completed delivery steps rather than restarting the full workflow. Avoid optional
-cleanup, repeated reviews, and broad checks that add little evidence for the current change.
-
-For large implementations, cross-cutting changes, or changes with substantial integration risk,
-allow time for deeper inspection, broader tests, and full final verification. Scale effort to the
-actual impact; a small diff can still require broad checks when it changes a shared contract.
-
-Do not skip required checks or weaken correctness to meet an arbitrary time target. When necessary
-work will materially delay a quick follow-up, explain the reason and expected cost briefly, then
-continue within the authorized scope. No new approval is needed solely because a check takes time.
-
-## Establish Scope and a Baseline
-
-Before editing, identify the owned files, affected public interfaces, direct consumers, and the
-smallest relevant verification commands. Confirm that the worktree can run those commands and
-record pre-existing failures. For migrations, build the consumer inventory before changing the
-first call site.
-
-Do not broaden the change or start root verification while the owned slice still lacks a stable
-focused check. If the same approach fails twice, stop retrying it. Minimize the failure, inspect the
-responsible boundary, and update the plan before another edit.
-
-## Reuse Verification Across Follow-ups
-
-Choose verification from the changes since the last verified state, not from the arrival of a user
-message or the intent to report completion. Preserve passing results across follow-ups, review
-corrections, compaction, and session restoration while their relevant inputs remain unchanged.
-
-Keep a brief verification record in the existing task state: command, result, covered code state,
-and subsequent edits that invalidate it. Record which checks remain required. Do not create a
-separate tracking system for a small task.
-
-- Questions or explanations with no file changes require no reruns.
-- Documentation or comment-only edits need applicable formatting or documentation checks, unless
-  they affect executable examples, generated output, or tooling directives.
-- Code edits require checks covering the changed behavior and affected consumers. Broaden scope
-  when shared contracts, configuration, dependencies, or test infrastructure change.
-- Run full verification at the required merge or signoff boundary, when explicitly requested, or
-  when the change's impact warrants it. Do not repeat it solely to conclude another response.
-
-Follow explicit repository verification requirements. If they mandate broader checks, satisfy
-those requirements rather than treating this guidance as an exemption. A commit-specific signoff
-must cover the required final commit; ordinary passing checks need not be rerun just because an
-unchanged tree received a new commit hash.
-
-When finishing, distinguish newly run checks from reused results and state any remaining coverage
-limits. Never present an earlier result as covering edits that invalidated it.
-
-## Assume Competent Callers
-
-Treat documented contracts, public types, and established conventions for library and other
-in-process programmatic APIs as agreements with competent, cooperative callers. Assume callers can
-understand the contract, recognize their own mistakes, and correct their usage.
-
-Do not add validation, provenance tracking, wrappers, compatibility paths, defensive state, or
-special error classification solely to accommodate behavior outside the supported contract,
-including callers that:
-
-- violate documented preconditions;
-- bypass or misrepresent public types;
-- forge library-owned values, tokens, or error variants;
-- construct states the supported API cannot produce; or
-- otherwise disregard documented conventions.
-
-Let unsupported misuse fail naturally. Do not complicate supported behavior merely to produce a
-friendlier result for contract violations, and do not add tests requiring unsupported misuse to be
-handled unless the public API explicitly promises that behavior.
-
-This assumption does not apply at genuine trust boundaries, including network or persisted data,
-untyped external input, IPC and platform adapters, security or capability boundaries, and
-operations where misuse could silently corrupt or destroy unrelated data. Preserve library
-invariants and guarantees owed to supported callers.
-
-Before adding defensive machinery, require a concrete supported use case—not merely hypothetical
-misuse—and determine whether documentation, stronger types, or a simpler interface addresses it
-better. Treat automated review feedback about unsupported misuse as a design suggestion, not an
-implementation requirement; it must not expand the user's stated scope or override the intended
-contract.
-
-## Preserve Continuity Across Compaction
-
-Treat context compaction and session restoration as fresh triggers for this skill. Before taking further implementation action after either event, re-read this file completely, then re-read the original task and every issue, PRD, plan, or other artifact that defines its acceptance criteria.
-
-At the start of the task, use the harness's persistent plan or task state to record the defining artifacts, explicit acceptance criteria, and delivery obligations. Keep this exact marker in that state until the task is complete:
-
-```text
-COMPACTION CONTINUITY: Re-read implement-code-change and the task-defining artifacts before continuing after compaction or session restoration.
-```
-
-Preserve the marker and all incomplete acceptance and delivery criteria in every plan update and compaction summary. If the harness has no persistent plan or task state, put them in the repository's existing task-planning artifact instead. Do not rely on conversational memory alone.
-
-## Use Roborev Throughout
-
-Before starting implementation, read the standalone [working-with-roborev skill](../working-with-roborev/SKILL.md) completely and follow it throughout the task. Treat its asynchronous review loop as part of the implementation workflow.
-
-## Respect Integration Ownership
-
-Determine whether this run owns the full change or one delegated slice. A delegated slice runs
-focused checks for its owned files and produces the requested handoff or commit. The parent or
-named integration owner owns rebases, root verification, pull-request updates, final stack
-curation, and cross-slice fixes. Do not repeat those integration steps in each worker unless the
-task explicitly assigns them.
-
-## Create a Reviewable Commit Stack
-
-Before planning implementation slices, read the standalone [reviewable-commits skill](../reviewable-commits/SKILL.md) completely and follow it throughout the task.
-
-Put the anticipated review units in the persistent implementation plan. Every implementation slice must end with explicit verification and commit gates. Do not mark a completed slice done or begin the next slice until it has been committed.
-
-Use this commit workflow during active implementation. The required finishing handoff below owns final stack curation after implementation and review feedback are complete.
-
-## Apply the Repository's Refactoring Policy
-
-When the requested work refactors, replaces, or modifies existing code or interfaces, read the standalone [backwards-compatibility skill](../backwards-compatibility/SKILL.md) completely before planning the change and follow it throughout the task.
-
-## Route the Change
-
-Classify each requested change before writing a test.
-
-Tests must exercise supported behavior. A test for behavior outside the documented API contract
-does not justify production complexity.
-
-Choose the proof before choosing a test. Name a plausible incorrect implementation that the new
-test would reject while the compiler, linter, build, and existing tests still pass. If there is no
-such failure, use the direct static check and do not add a persistent test. A test must provide
-independent evidence, not repeat a type annotation, schema declaration, export inventory, or other
-fact already enforced by the toolchain.
-
-Use the behavioral branch only when all of these have clear answers:
-
-1. What behavior important to a user or caller is changing?
-2. Through which supported public interface can that behavior be observed?
-3. Would the test remain valuable after another internal refactor?
-4. Is the behavior important enough to justify permanent test maintenance?
-
-Then follow exactly one route:
-
-- **Behavioral change or bug fix:** Read the standalone [TDD skill](../tdd/SKILL.md) completely and follow it.
-- **Structural, mechanical, or trivial change:** Read the standalone [structural-code-change skill](../structural-code-change/SKILL.md) completely and follow it.
-- **Mixed request:** Separate the behavioral and structural slices. Read and apply each standalone skill only to its corresponding slice. Do not force the whole request through one workflow.
-
-When uncertain, identify the claimed user- or caller-visible outcome. If there is none, use the structural route.
-
-## Iterate for Quality
-
-Use the turnaround policy above to judge further implementation, inspection, and verification passes. Continue when another pass is likely to find a material correctness, integration, or maintainability issue. Stop when the agreed scope is complete and sufficient evidence covers it; do not add optional passes merely because more time is available.
-
-After reaching an apparently complete state, review the work again from different angles. Look for simpler designs, missing edge cases, weak abstractions, integration gaps, unnecessary complexity, and opportunities to better match the repository's established patterns. Continue iterating while another pass can produce a material improvement.
-
-Stop and reconvene with the user when implementation reveals significant scope or design friction.
-This includes cases where:
-
-- completing the task requires work outside the agreed scope;
-- the plan or acceptance criteria no longer describe a sound implementation;
-- the apparent solution is a workaround for a weak existing or proposed API;
-- the design forces repeated adapters, special cases, duplicated state, or other complexity that
-  points to a missing abstraction or misplaced responsibility; or
-- a cleaner solution requires a meaningful API, architecture, compatibility, or ownership decision.
-
-Do not broaden the scope merely because one technical path appears clear. Do not hide the friction
-inside a workaround or silently ship a knowingly weak design to keep the diff small. Preserve the
-current work when practical, then report the evidence, the scope or API weakness, and the decision
-needed from the user. Continue only after the user confirms the revised direction and scope.
-
-## Pull Requests During Implementation
-
-When working on a feature branch, or when tasked to create or update a pull request, and a visible upstream repository is available:
-
-1. Push the branch and create a pull request after the first commit. Prefer a draft pull request while implementation is incomplete.
-2. After each completed vertical slice, push the branch and update the pull request title or description if the implementation scope, decisions, or status have changed.
-
-## Required Finishing Handoff
-
-When the requested implementation appears complete, do not perform an ad hoc cleanup or make a completion claim. Read the standalone [finish-implementation-stack skill](../finish-implementation-stack/SKILL.md) completely and follow it as the required final phase.
-
-After finalizing the commit stack, invoke the `feature_ready` RoboRev panel if it is configured
-in the effective global or repository configuration. Review the full task or PR range from its
-exact base, not only `HEAD`. Follow the finishing skill's final review gate for invocation,
-task context, and findings.
-
-Final panel corrections must remain normal additional commits. Preserve the reviewed stack and
-the correction commits; do not amend, autosquash, or rebase them into earlier commits. This also
-applies to corrections from automatic reviews of those new commits.
-
-If that workflow finds missing implementation, resume this skill with the updated persistent plan. The task is complete only when the finishing workflow passes all applicable gates.
+1. **Align.** Inspect code, repository guidance, and task artifacts before asking questions. Resolve
+   consequential ambiguity until outcome and workplan are clear. Necessary coordinated API/consumer
+   changes are in scope; discuss large expansions. Keep acceptance criteria, scope, base/head,
+   verification, and outstanding obligations in existing task state. After restoration, re-read this
+   skill and task artifacts; resume rather than restart.
+2. **Implement and commit.** Route design to [codebase-design](../codebase-design/SKILL.md),
+   existing-code changes to the [refactor policy](references/refactor-policy.md), behavior to
+   [TDD](../tdd/SKILL.md), and mechanical work to
+   [structural-code-change](../structural-code-change/SKILL.md); split mixed work accordingly. Read
+   [commit](references/commits.md)/[review](references/roborev.md) mechanics before starting. Commit
+   coherent units often; create a draft PR early when a remote exists and keep it current.
+3. **Verify proportionately.** Follow repository requirements. Run relevant static checks and tests
+   for changed paths and consumers; run long tests when affected, broader verification at readiness,
+   final CI at finalization. Reuse passing evidence until inputs change; messages and commit hashes
+   alone do not invalidate it. Automate repetitive edits after verifying one transformation.
+4. **Review commits.** Use asynchronous RoboRev throughout; check at natural pauses and resolve
+   relevant jobs before readiness.
+5. **Ready for user review.** Check acceptance, curate reviewable commits, verify, and request
+   full-range review. Resolve concerns, update the PR, and report evidence and limits. This is not
+   merge authorization.
+6. **Integrate feedback.** User-requested corrections always stay separate follow-up commits,
+   including before readiness. Preserve full-range-review corrections too. Parent rebases remain
+   allowed; preserve units and revalidate changed resolutions. For GitHub comments and reviews, use
+   [handling-pr-reviews](../handling-pr-reviews/SKILL.md).
+7. **Finalize on user instruction.** Follow [finalization](references/finalization.md): delegate
+   cleanup within this PR and assigned responsibilities, remove disposable artifacts, request final
+   range review, finalize the PR description, run final CI, merge. Use judgment on renewed approval
+   for material changes.

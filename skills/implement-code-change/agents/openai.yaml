@@ -1,4 +1,4 @@
 interface:
   display_name: "Implement Code Change"
-  short_description: "Route code changes to the right workflow"
-  default_prompt: "Use $implement-code-change to implement this change with the appropriate verification strategy."
+  short_description: "Guide implementation, review, feedback, and delivery"
+  default_prompt: "Use $implement-code-change to develop this change through review and user-triggered finalization."

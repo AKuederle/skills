@@ -1,46 +1,21 @@
 ---
 name: structural-code-change
-description: Use whenever the user tasks you with simple behavior-preserving refactoring or mechanical code changes in a serious repository, including renaming symbols, moving modules, reorganizing packages, updating imports or exports, removing incidental code, or changing packaging without changing runtime behavior.
+description: Verify mechanical, behavior-preserving edits such as renames, moves, imports/exports, packaging, and incidental-code removal without manufactured TDD.
 ---
 
-# Structural Code Changes
+# Structural changes
 
-Use this workflow for changes that preserve behavior or are checked better by development tooling. Do explicitly not use TDD for trivial changes with obvious outcomes and limited impact. Do not manufacture a red-green cycle.
+Read the [refactor policy](../implement-code-change/references/refactor-policy.md) before
+planning/editing; [implement-code-change](../implement-code-change/SKILL.md) owns
+commits/reviews/delivery. Establish green with the smallest relevant existing check, make the
+change, rerun. Add coverage only for meaningful unprotected behavior discovered.
 
-Before planning or editing the change, read the standalone [backwards-compatibility skill](../backwards-compatibility/SKILL.md) completely unless it is already loaded for the current task. Follow the repository policy and refactoring-quality rules it provides throughout this workflow.
+Do not persist tests for names/paths, source or config text, mechanical imports, formatting,
+mirrored generated output, private structure, or facts already enforced statically. Temporary probes
+can support diagnosis.
 
-## Refactor Under Green
-
-1. Run the smallest relevant existing test suite or validation command and establish green.
-2. Make the smallest structural or mechanical change.
-3. Run the same checks again.
-4. Add a test only if the work reveals important behavior that was previously unprotected.
-
-## Do Not Test the Diff
-
-Do not create tests solely to verify:
-
-- File or module names
-- Symbol, class, function, or object names
-- File locations or directory structure
-- The presence or absence of source text, logging calls, comments, or configuration text
-- Mechanical import-path changes
-- Formatting, spelling, or autocorrect changes
-- Generated output mirroring the implementation diff
-- Private implementation structure
-- Facts already enforced adequately by static tooling
-
-## Choose Direct Verification
-
-Use the most direct relevant check:
-
-- Rename or file move: compiler, type checker, build, and existing tests
-- Internal import or export change: compiler, build, and existing tests
-- Supported public export change: consumer-facing import or build smoke test when that boundary is a durable contract
-- Packaging change: package, install, and consumer import smoke test
-- Removal of incidental logging: diff inspection, linting, and existing tests
-- Removal of sensitive or contractually forbidden logging: behavioral or security regression test when the absence is itself a durable requirement
-
-For complex cases, you can use inline scripts, temporary test files or script to convince yourself that things work correctly. But for changes classified by this skill, don't persist these validations in the repository.
-
-If the change exposes a genuine behavioral gap, isolate that slice, stop this workflow for it, and use the standalone [TDD skill](../tdd/SKILL.md). Do not apply TDD to the remaining structural work.
+Use compiler/typecheck/build and existing tests for renames/moves/internal exports; durable public
+exports may need consumer import/build smoke tests. Packaging needs package/install/consumer
+verification. Incidental log removal needs inspection/lint/existing tests; forbidden sensitive
+logging may need a behavioral/security regression. If behavior changes, isolate that slice under
+[TDD](../tdd/SKILL.md); do not impose it on remaining structural work.

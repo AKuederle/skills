@@ -1,77 +1,15 @@
-# Good and Bad Tests
+# Test examples
 
-## Good Tests
-
-**Integration-style**: Test through real interfaces, not mocks of internal parts.
-
-```typescript
-// GOOD: Tests observable behavior
-test("user can checkout with valid cart", async () => {
-  const cart = createCart();
-  cart.add(product);
-  const result = await checkout(cart, paymentMethod);
-  expect(result.status).toBe("confirmed");
-});
-```
-
-Characteristics:
-
-- Tests behavior users/callers care about
-- Uses public API only
-- Survives internal refactors
-- Describes WHAT, not HOW
-- One logical assertion per test
-
-## Bad Tests
-
-**Implementation-detail tests**: Coupled to internal structure.
-
-```typescript
-// BAD: Tests implementation details
-test("checkout calls paymentService.process", async () => {
-  const mockPayment = jest.mock(paymentService);
-  await checkout(cart, payment);
-  expect(mockPayment.process).toHaveBeenCalledWith(cart.total);
-});
-```
-
-Red flags:
-
-- Mocking internal collaborators
-- Testing private methods
-- Asserting on call counts/order
-- Test breaks when refactoring without behavior change
-- Test name describes HOW not WHAT
-- Verifying through external means instead of interface
-
-```typescript
-// BAD: Bypasses interface to verify
-test("createUser saves to database", async () => {
-  await createUser({ name: "Alice" });
-  const row = await db.query("SELECT * FROM users WHERE name = ?", ["Alice"]);
-  expect(row).toBeDefined();
-});
-
-// GOOD: Verifies through interface
-test("createUser makes user retrievable", async () => {
-  const user = await createUser({ name: "Alice" });
-  const retrieved = await getUser(user.id);
-  expect(retrieved.name).toBe("Alice");
-});
-```
-
-**Tautological tests**: Expected value restates the implementation, so the test passes by construction.
-
-```typescript
-// BAD: Expected value is recomputed the way the code computes it
-test("calculateTotal sums line items", () => {
-  const items = [{ price: 10 }, { price: 5 }];
-  const expected = items.reduce((sum, i) => sum + i.price, 0);
-  expect(calculateTotal(items)).toBe(expected);
-});
-
-// GOOD: Expected value is an independent, known literal
-test("calculateTotal sums line items", () => {
-  expect(calculateTotal([{ price: 10 }, { price: 5 }])).toBe(15);
-});
-```
+- `createUser` then `getUser` proves caller behavior; a database read is appropriate if persistence
+  is the contract. Spying on an internal call alone does not make it a contract.
+- Empty-cart checkout: real checkout + recording payment double; assert no charge and a valid-cart
+  positive control with promised amount/count. Do not mock checkout itself. Choose doubles for
+  needed control, not dependency category; substantial recreated application logic suggests a higher
+  interface/real collaborators.
+- `expect(calculateTotal(items)).toBe(calculateTotal(items))` cannot detect deterministic
+  calculation errors. An independent literal example, `10 + 5 → 15`, or reference model can.
+  Duplicating the production algorithm may copy its mistake without being strictly tautological.
+- Debit + credit assertions can establish one transfer behavior. Keep scenario values visible;
+  extract setup only for readability.
+- Cancellation: control readiness with a barrier, observe promised result/no late publication;
+  prefer this to sleeps and incidental internal state.
