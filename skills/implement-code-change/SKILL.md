@@ -5,36 +5,10 @@ description: Use whenever the user tasks you with creating new code or refactori
 
 # Implement Code Changes
 
-## Vision
+Coordinate scoped work through design, implementation, verification, review, and delivery.
 
-Implement the requested behavior in a design that is easy to use correctly, reason about locally,
-and change safely. Optimize for the engineers and agents who will make the next change: they
-should need less context, encounter fewer hidden dependencies, and find one clear home for each
-responsibility.
+## Workflow tips
 
-## Design
-
-- Interface-first design. Prefer deep modules and information hiding.
-- Optimize for locality of reasoning and change.
-- Avoid implicit state machines and temporal coupling.
-- Make states, transitions, invariants, and ownership explicit.
-- Derive instead of synchronizing duplicated mutable state.
-- Design by contract: assume competent callers; reject defensive programming for unsupported misuse.
-  Preserve supported invariants and explicit guarantees. Validate trust boundaries and protect against
-  corruption or destruction of unrelated data. Review feedback does not expand scope.
-- Fix common causes; avoid compensating complexity.
-- Prefer subtraction over speculative generality.
-- Treat necessary coordinated changes as in scope; improve repository-owned
-  APIs and their consumers together. Discuss large scope expansions.
-
-## Tips
-
-- Start from a skeleton: generate temporary views without function bodies to fit large areas in context.
-- Summarize with subagents: use focused summaries to reason across large areas when delegation is authorized.
-- Map dependencies: script what imports what and refresh the graph around structural changes.
-- Enter where leverage is highest: start where one improvement simplifies the most callers.
-- Design it twice: sketch two materially different interfaces before committing to a difficult design.
-- Apply the deletion test: imagine removing an abstraction. Does complexity disappear or return to its callers?
 - Build the lever: automate repetitive edits with a codemod or script; verify one transformation before applying it broadly.
 
 ## Match Effort to Scope and Turnaround
@@ -63,6 +37,9 @@ Before editing, identify the owned files, affected public interfaces, direct con
 smallest relevant verification commands. Confirm that the worktree can run those commands and
 record pre-existing failures. For migrations, build the consumer inventory before changing the
 first call site.
+
+Treat necessary coordinated changes as in scope; improve repository-owned APIs and their consumers
+together. Discuss large scope expansions.
 
 Do not broaden the change or start root verification while the owned slice still lacks a stable
 focused check. If the same approach fails twice, stop retrying it. Minimize the failure, inspect the
@@ -132,6 +109,9 @@ When the requested work refactors, replaces, or modifies existing code or interf
 
 ## Route the Change
 
+For new or changed designs, read [codebase-design](../codebase-design/SKILL.md) before implementing.
+It owns the design principles and techniques; this skill owns the implementation workflow.
+
 Classify the change and choose the appropriate verification workflow.
 
 Then follow exactly one route:
@@ -146,7 +126,8 @@ When uncertain, identify the claimed user- or caller-visible outcome. If there i
 
 Use the turnaround policy above to judge further implementation, inspection, and verification passes. Continue when another pass is likely to find a material correctness, integration, or maintainability issue. Stop when the agreed scope is complete and sufficient evidence covers it; do not add optional passes merely because more time is available.
 
-After reaching an apparently complete state, review the work again from different angles. Look for simpler designs, missing edge cases, weak abstractions, integration gaps, unnecessary complexity, and opportunities to better match the repository's established patterns. Continue iterating while another pass can produce a material improvement.
+Review the changes against the accepted requirements, repository guidance, and verification results.
+Use `codebase-design` for design assessment and TDD for test-quality assessment.
 
 Stop and reconvene with the user when implementation reveals significant scope or design friction.
 This includes cases where:

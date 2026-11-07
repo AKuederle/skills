@@ -172,7 +172,7 @@ The complete gate is documented in [the final-review reference](skills/working-w
 
 ### `implement-code-change`
 
-The [`implement-code-change`](skills/implement-code-change/) skill is the main entry point for implementation work in serious repositories. It coordinates reviewable commits and roborev, applies the repository's refactoring policy, routes behavioral work to TDD, routes structural work to the structural workflow, and handles mixed changes as separate slices.
+The [`implement-code-change`](skills/implement-code-change/) skill is the main entry point for implementation work in serious repositories. It owns the workflow: scope, verification, commits, reviews and delivery. It routes design decisions to `codebase-design`, behavioral work to TDD, and structural work to the structural workflow.
 
 ### `reviewable-commits`
 
@@ -208,7 +208,7 @@ The [`tdd`](skills/tdd/) directory adapts the upstream [TDD skill from mattpococ
 
 ### `codebase-design`
 
-The [`codebase-design`](skills/codebase-design/) directory is a faithful copy of the upstream [codebase-design skill from mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills/engineering/codebase-design). It provides shared vocabulary and guidance for deep modules, seam placement, testable interfaces, deepening shallow module clusters, and comparing alternative designs. The copy was checked against upstream `main` at commit `9603c1cc8118d08bc1b3bf34cf714f62178dea3b` on 2026-07-20.
+The [`codebase-design`](skills/codebase-design/) directory adapts the upstream [codebase-design skill from mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills/engineering/codebase-design), originally copied at `9603c1cc8118d08bc1b3bf34cf714f62178dea3b` on 2026-07-20. It owns the design vision, principles and techniques, with concise references for deepening modules and comparing interfaces. Implementation workflow and test quality remain in their companion skills.
 
 ### `unslop`
 
