@@ -86,11 +86,14 @@ See [the review reference](skills/implement-code-change/references/roborev.md) f
 exclusive to the current project, or reusable across suitable projects. Project-only skills stay
 in that project. Reusable source goes into this repository through a PR and is installed with
 `npx skills` from the pushed PR commit, globally or into the current project as selected.
+All custom skills that are not exclusive to one project use this installer and its source lockfile.
 
 ### `update-custom-skill`
 
 [`update-custom-skill`](skills/update-custom-skill/) resolves installed skills through their
-lockfiles and edits user-managed source through a PR. For third-party sources, it asks before
+lockfiles and edits user-managed source through a PR. Every GitHub repository the user can access
+counts as user-managed. When the installation is behind upstream, the skill explains the differences
+and asks how to integrate them before editing or reinstalling. For third-party sources, it asks before
 making a personal copy, preserves upstream attribution, and records the new source. Each update
 immediately refreshes the affected installation from the pushed commit while preserving scope.
 

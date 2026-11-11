@@ -1,9 +1,6 @@
 ---
 name: create-custom-skill
 description: Create a personal agent skill, choose whether its source belongs in this project or the personal skills repository, and publish and install reusable skills.
-metadata:
-  source-repository: "https://github.com/AKuederle/skills"
-  source-path: "skills/create-custom-skill/SKILL.md"
 ---
 
 # Create a custom skill
@@ -18,17 +15,13 @@ Ask the user which scope they want, unless they already chose explicitly:
 
 Keep the target project's absolute path before changing directories. Scope controls both source ownership and installation; a reusable skill installed locally still has its source in the personal repository.
 
+Install every custom skill that is not exclusive to the current project through `npx skills`, whether installed globally or into one project. Do not distribute these skills by manual copying or hand-created symlinks; the installer records their source in the matching skills lockfile.
+
 ## Author reusable source
 
 The personal repository is `https://github.com/AKuederle/skills`. Reuse a matching local checkout when available, otherwise clone it. Read its repository guidance, preserve unrelated changes, and work on a feature branch.
 
-Create `skills/<name>/SKILL.md` and any needed resources. Use available system skill-authoring guidance for the content and validation. Keep instructions focused on the requested capability. Add provenance in frontmatter, replacing the path with this skill's actual source path:
-
-```yaml
-metadata:
-  source-repository: "https://github.com/AKuederle/skills"
-  source-path: "skills/<name>/SKILL.md"
-```
+Create `skills/<name>/SKILL.md` and any needed resources. Use available system skill-authoring guidance for the content and validation. Keep instructions focused on the requested capability. The installer lockfile records source provenance; do not require duplicate source metadata in the skill.
 
 Validate the skill and any executable helpers. Run `npx -y skills@latest add . --list` from the source repository to check discovery. Add its entry to the repository's existing skill catalog.
 

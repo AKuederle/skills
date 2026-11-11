@@ -1,9 +1,6 @@
 ---
 name: update-custom-skill
 description: Update an installed agent skill at its original source using skills lockfiles, create a PR for user-managed sources, and reinstall the updated version. Ask before copying third-party skills into the personal repository.
-metadata:
-  source-repository: "https://github.com/AKuederle/skills"
-  source-path: "skills/update-custom-skill/SKILL.md"
 ---
 
 # Update a custom skill
@@ -19,19 +16,23 @@ For a skill installed through `npx skills`, look up its exact name in the matchi
 
 Read `source`, `sourceType`, `sourceUrl`, `skillPath`, `ref`, and `installMode` when present. Use the lock entry to resolve the original repository and skill path, not the installed directory's containing repository. A symlink to the installer's canonical directory is not a link to the authoring source. Lockfile schemas vary; inspect the actual entry rather than assuming every field exists.
 
-If no lock entry exists, inspect the resolved symlink target and `metadata.source-repository` / `metadata.source-path` in `SKILL.md`. A project-authored skill with no external source is edited in its current repository. If the source remains ambiguous, ask instead of inventing provenance. Never edit only an installed copy when its authoring source is elsewhere.
+If no lock entry exists, inspect the resolved symlink target and any existing source metadata in `SKILL.md`. A project-authored skill with no external source is edited in its current repository. If the source remains ambiguous, ask instead of inventing provenance. Never edit only an installed copy when its authoring source is elsewhere.
 
-Compare the installed contents with the resolved source revision before reinstalling. Preserve any local edits; reconcile relevant differences into the proposed source change instead of overwriting them.
+## Check upstream before editing
+
+Fetch the current upstream skill and compare it with the installed version before changing source or reinstalling. Use the lock's installed revision as the baseline when recoverable, distinguish local edits from upstream changes, and compare the skill's resources as well as `SKILL.md`. For a tracked branch, check its current head. For a commit or tag pin, check the source repository's current development branch too, while respecting that the pin may be intentional. Do not treat a folder hash as a commit SHA. If the baseline or intended upstream cannot be resolved, explain that uncertainty and ask which version to use.
+
+When upstream has changes missing from the installation, explain the meaningful differences to the user, including conflicts with local customizations or the requested edit. Ask how they want to integrate them: incorporate all upstream changes before the requested edit, incorporate selected changes, or keep the installed baseline and apply only the requested edit. Wait for the answer before editing or reinstalling; an update request alone does not select an integration strategy. Preserve local edits and implement the chosen strategy. Reuse an integration choice already given for these differences rather than asking again. If there are no upstream changes, proceed without this question.
 
 ## Choose source ownership
 
-`AKuederle/skills` and repositories owned by `AKuederle` are user-managed. Treat another repository as user-managed only when the user has identified it as such or there is clear ownership evidence. Having permission to contribute does not establish that it is user-managed.
+For this workflow, every GitHub repository the user can access is **user-managed**, including public repositories and shared or organization repositories, regardless of ownership or write access. Verify access through the user's authenticated GitHub connection or CLI. Do not require the repository to belong to `AKuederle`. Access determines this route, not permission to push directly: use the normal fork-and-PR route if direct branch pushes are unavailable. Do not classify an authentication failure alone as proof that a repository is third-party; resolve missing access information with the user. For non-GitHub sources, use the user's stated management relationship.
 
-**User-managed source:** Reuse a matching checkout or clone it. Read repository guidance, preserve unrelated work, and make the requested changes on a feature branch at the original `skillPath`. Create a PR there, including when the source is a project repository rather than the personal skill collection. No extra permission question is needed for this route.
+**User-managed source:** Reuse a matching checkout or clone it. Read repository guidance, preserve unrelated work, and make the requested changes on a feature branch at the original `skillPath`, using the agreed upstream integration strategy when applicable. Create a PR there, including when the source is a project repository rather than the personal skill collection. No ownership confirmation is needed for this route; the upstream integration question still applies when versions differ.
 
 **Third-party source:** Before copying or changing it, ask whether the user wants a customized copy in `https://github.com/AKuederle/skills`. Wait for the answer. If they decline, stop without changing the source or installation. If they agree, copy the full skill and required resources into `skills/<name>/` in that repository. Preserve license notices and attribution, record the upstream repository, path, and revision, then make the requested changes and create a PR in the personal repository. Keep the installed name unless a collision requires a user choice. Do not submit a third-party upstream PR unless separately requested.
 
-For a customized copy, set `metadata.source-repository` and `metadata.source-path` to its new personal-repository source; retain upstream provenance separately, for example `metadata.upstream-repository`, `metadata.upstream-path`, and `metadata.upstream-revision`. For an existing user-managed skill, add or correct source metadata to identify its actual source. Do not put a machine-specific checkout path into distributed provenance.
+For a customized copy, preserve upstream provenance and attribution with its resources, for example in existing license notices or upstream metadata. The new installation's lock entry must identify the personal source; duplicate source metadata is not required. Correct any existing source metadata that would misleadingly identify the copied skill's authoring source. Do not put a machine-specific checkout path into distributed provenance.
 
 ## Validate, publish, and reinstall every update
 
@@ -44,6 +45,8 @@ npx -y skills@latest add 'https://github.com/OWNER/REPO/tree/HEAD_SHA/SKILL_DIRE
 ```
 
 Preserve installation scope and existing agent targets. For project installations, run in the saved target project directory and omit `--global`. Preserve copy mode with `--copy` when recorded. Install only the affected skill, not the whole collection. Use an equivalent revision-specific Git source for other supported hosts. Do not install from unchanged `main` or from a temporary checkout path that loses remote provenance.
+
+Every custom skill not exclusive to the current project must be installed through `npx skills`. If such a skill was previously copied manually or linked directly to source, migrate that installation to `npx skills` after publishing the update, preserving scope and agent targets. If a fork supplied the PR head, install from that fork's pushed commit and report both the PR's target repository and the source now recorded in the lock.
 
 For a project-authored skill whose source is already its active installation directory, the source edit itself updates the installed skill. Verify it there; do not install a second copy through `npx skills`.
 
