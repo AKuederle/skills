@@ -1,6 +1,6 @@
 ---
 name: create-custom-skill
-description: Create a personal agent skill, choose whether its source belongs in this project or the personal skills repository, and publish and install reusable skills.
+description: Use when the user asks to create or install a custom skill. Choose whether its source belongs in this project or the personal skills repository, and publish and install reusable skills.
 ---
 
 # Create a custom skill
