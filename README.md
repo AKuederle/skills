@@ -80,6 +80,20 @@ See [the review reference](skills/implement-code-change/references/roborev.md) f
 
 ## Skills
 
+### `create-custom-skill`
+
+[`create-custom-skill`](skills/create-custom-skill/) asks whether a new skill is user-wide,
+exclusive to the current project, or reusable across suitable projects. Project-only skills stay
+in that project. Reusable source goes into this repository through a PR and is installed with
+`npx skills` from the pushed PR commit, globally or into the current project as selected.
+
+### `update-custom-skill`
+
+[`update-custom-skill`](skills/update-custom-skill/) resolves installed skills through their
+lockfiles and edits user-managed source through a PR. For third-party sources, it asks before
+making a personal copy, preserves upstream attribution, and records the new source. Each update
+immediately refreshes the affected installation from the pushed commit while preserving scope.
+
 ### `implement-code-change`
 
 [`implement-code-change`](skills/implement-code-change/) is the lifecycle router: align, implement
