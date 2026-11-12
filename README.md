@@ -80,6 +80,10 @@ See [the review reference](skills/implement-code-change/references/roborev.md) f
 
 ## Skills
 
+### `background-gui-automation`
+
+The [`background-gui-automation`](skills/background-gui-automation/) skill routes invisible desktop GUI work through a private kwin-mcp Wayland session. Agents can operate several apps together without taking the user's focus or pointer, and stop rather than falling back to the live desktop when isolation fails.
+
 ### `create-custom-skill`
 
 [`create-custom-skill`](skills/create-custom-skill/) asks whether a new skill is user-wide,
